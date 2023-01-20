@@ -1,53 +1,51 @@
-import paho.mqtt.client as mqtt
+import paho.mqtt.client as paho
+import os
+import socket
 import ssl
-import paho.mqtt.subscribe as subscribe
-from . import callbacks
+from time import sleep
+from random import uniform
 
-# region armado_conexion
-# ------------------ armado de conexion --------------------------- #
-aws_iot_endpoint = "a3df45vgz0yp2s-ats.iot.us-east-1.amazonaws.com"
-url = "https://{}".format(aws_iot_endpoint)
-
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-handler = logging.StreamHandler(sys.stdout)
-log_format = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(log_format)
-logger.addHandler(handler)
+connflag = False
 
 
-PATH_TO_CERTIFICATE = "certificates/certificate.pem.crt"
-PATH_TO_PRIVATE_KEY = "certificates/private.pem.key"
-PATH_TO_AMAZON_ROOT_CA_1 = "certificates/AmazonRootCA1.pem"
+def on_connect(client, userdata, flags, rc):
+    global connflag
+    connflag = True
+    print("Connection returned result: " + str(rc))
 
-client = mqtt.Client(client_id="myPy",
-                     protocol=mqtt.MQTTv311,
-                     clean_session=True,
-                     )
-client.tls_set(certfile=PATH_TO_CERTIFICATE,
-               keyfile=PATH_TO_PRIVATE_KEY,
-               ca_certs=PATH_TO_AMAZON_ROOT_CA_1,
-               cert_reqs=ssl.CERT_REQUIRED)
 
-# ------------------------------------------------------------------ #
-# endregion armado_conexion
+def on_message(client, userdata, msg):
+    print(msg.topic+" "+str(msg.payload))
 
-client = mqtt.Client()
-client.on_connect = callbacks.on_connect
-client.on_message = callbacks.on_message
-client.connect(ENDPOINT, port=8883, keepalive=60)  # Port 8883 for TCP
+# def on_log(client, userdata, level, buf):
+#    print(msg.topic+" "+str(msg.payload))
 
-'''
-topics = {
-    "$aws/things/grilletes/shadow/update": callbacks.grilletes_callback,
-    "$aws/things/soporte_cuchillos/shadow/update": callbacks.soporte_cuchillos_callback,
-    "$aws/things/luz/shadow/update": callbacks.luz_callback,
-    "$aws/things/heladera/shadow/update": callbacks.heladera_callback,
-    "$aws/things/especiero/shadow/update": callbacks.especiero_callback,
-}
 
-for topic, callback in topics.items():
-    subscribe.callback(callback, topic, hostname=ENDPOINT)
+mqttc = paho.Client()
+mqttc.on_connect = on_connect
+mqttc.on_message = on_message
+# mqttc.on_log = on_log
 
-'''
+awshost = "a3df45vgz0yp2s-ats.iot.us-east-1.amazonaws.com"
+awsport = 8883
+clientId = "randomData"
+thingName = "randomData"
+caPath = "certificates/AmazonRootCA1.crt"
+certPath = "certificates/certificate.pem"
+keyPath = "certificates/private.pem"
+
+mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath,
+              cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
+
+mqttc.connect(awshost, awsport, keepalive=60)
+
+mqttc.loop_start()
+
+while 1 == 1:
+    sleep(0.5)
+    if connflag == True:
+        tempreading = uniform(20.0, 25.0)
+        mqttc.publish("temperature", tempreading, qos=1)
+        print("msg sent: temperature " + "%.2f" % tempreading)
+    else:
+        print("waiting for connection...")
