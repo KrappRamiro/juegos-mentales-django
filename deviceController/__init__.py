@@ -1,4 +1,5 @@
-from . import mqtt
+from .mqtt import mqttc
 
 # https://stackoverflow.com/questions/41015779/how-to-use-paho-mqtt-client-in-django
-mqtt.client.loop_start()
+
+mqttc.loop_start()

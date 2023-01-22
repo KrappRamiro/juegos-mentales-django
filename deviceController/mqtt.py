@@ -9,13 +9,21 @@ connflag = False
 
 
 def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        print("---------   Connected to MQTT Broker!   ---------")
+    else:
+        print("Failed to connect, return code %d\n", rc)
     global connflag
     connflag = True
-    print("Connection returned result: " + str(rc))
+    client.subscribe("$aws/things/tablero_herramientas/shadow/update", 1)
+    # client.subscribe("#", 1) #Suscribe to every topic, just for testing purposes
+    client.message_callback_add(
+        "$aws/things/tablero_herramientas/shadow/update",
+        callbacks.tablero_herramientas)
 
 
 def on_message(client, userdata, msg):
-    print(msg.topic+" "+str(msg.payload))
+    print(msg.topic + " " + str(msg.payload))
 
 # def on_log(client, userdata, level, buf):
 #    print(msg.topic+" "+str(msg.payload))
@@ -39,13 +47,5 @@ mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath,
 
 mqttc.connect(awshost, awsport, keepalive=60)
 
-mqttc.loop_start()
-
-while 1 == 1:
-    sleep(0.5)
-    if connflag == True:
-        tempreading = uniform(20.0, 25.0)
-        mqttc.publish("temperature", tempreading, qos=1)
-        print("msg sent: temperature " + "%.2f" % tempreading)
-    else:
-        print("waiting for connection...")
+# This is here to avoid circular imports
+from . import callbacks
