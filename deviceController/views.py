@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.forms import formset_factory
 from .forms import DeviceForm, PropertyForm
 import logging
+from . import actions
 logger = logging.getLogger(__name__)
 mongo_client = MongoClient()
 
@@ -11,30 +12,30 @@ db = mongo_client.posts
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the device controller index")
+    return render(request, "deviceController/index.html")
 
 
-def add_device(request):
-    PropertyFormSet = formset_factory(PropertyForm, extra=2)
-    formset = PropertyFormSet()
-    form = DeviceForm()
-    if request.method == "POST":
-        form = DeviceForm(request.POST)
-        formset = PropertyFormSet(request.POST)
-        if form.is_valid() and formset.is_valid():
-            logging.info("Both form and formset were valid")
-            form = form.cleaned_data
-            object_name = form["name"]
-            print(object_name)
-            for f in formset:
-                f = f.cleaned_data
-                if f == {}:
-                    continue
-                print("Name: {} \t Value: {}".format(f["name"], f["value"]))
-                print(f)
+def skip_step(request, step_name):
+    print("Se ha pedido skipear {}".format(step_name.replace("_", " ")))
+    if step_name == "tablero_herramientas":
+        actions.liberar_grillete(2)
+    elif step_name == "licuadora":
+        actions.liberar_grillete(1)
+    elif step_name == "soporte_especieros":
+        actions.liberar_grillete(4)
+        actions.abrir_alacena_pared()
+    elif step_name == "soporte_cuchillos":
+        actions.prender_luz_uv()
+    elif step_name == "soporte_pies":
+        actions.abrir_heladera()
+    elif step_name == "heladera":
+        actions.abrir_cajon_alacena()
+    elif step_name == "cuadro":
+        actions.abrir_cajon_comoda()
+        actions.abrir_tablero_electrico()
+    elif step_name == "caldera":
+        actions.abrir_caldera()
+    else:
+        print("ERROR!!! No se ha encontrado esa accion")
 
-        else:
-            logging.error("One of them was not valid")
-
-    context = {'form': form, 'formset': formset}
-    return render(request, 'deviceController/add_device.html', context)
+    return redirect(index)

@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('add_device', views.add_device, name='add_device'),
+    path('skip_step/<str:step_name>/', views.skip_step,
+         name="skip_step"),
 ]

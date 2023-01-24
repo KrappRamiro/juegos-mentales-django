@@ -15,11 +15,42 @@ def on_connect(client, userdata, flags, rc):
         print("Failed to connect, return code %d\n", rc)
     global connflag
     connflag = True
-    client.subscribe("$aws/things/tablero_herramientas/shadow/update", 1)
     # client.subscribe("#", 1) #Suscribe to every topic, just for testing purposes
+    # ----------- Tablero herramientas --------------- #
+    client.subscribe("$aws/things/tablero_herramientas/shadow/update", 1)
     client.message_callback_add(
         "$aws/things/tablero_herramientas/shadow/update",
         callbacks.tablero_herramientas)
+
+    # ----------- Especiero --------------- #
+    client.subscribe("$aws/things/especiero/shadow/update", 1)
+    client.message_callback_add(
+        "$aws/things/especiero/shadow/update",
+        callbacks.especiero)
+
+    # ----------- Soporte cuchillos --------------- #
+    client.subscribe("$aws/things/soporte_cuchillos/shadow/update", 1)
+    client.message_callback_add(
+        "$aws/things/soporte_cuchillos/shadow/update",
+        callbacks.soporte_cuchillos)
+
+    # ----------- Soporte Pies --------------- #
+    client.subscribe("$aws/things/soporte_pies/shadow/update", 1)
+    client.message_callback_add(
+        "$aws/things/soporte_pies/shadow/update",
+        callbacks.soporte_pies)
+
+    # ----------- Teclado de la heladera --------------- #
+    client.subscribe("heladera/teclado", 1)
+    client.message_callback_add(
+        "heladera/teclado",
+        callbacks.heladera)
+
+    # ----------- Caldera --------------- #
+    client.subscribe("$aws/things/caldera/shadow/update", 1)
+    client.message_callback_add(
+        "$aws/things/caldera/shadow/update",
+        callbacks.caldera)
 
 
 def on_message(client, userdata, msg):
