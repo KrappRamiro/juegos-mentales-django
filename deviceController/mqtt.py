@@ -8,6 +8,13 @@ from random import uniform
 connflag = False
 
 
+def on_message(client, userdata, message):
+    # Do something
+    print(" Received message " + str(message.payload)
+          + " on topic '" + message.topic
+          + "' with QoS " + str(message.qos))
+
+
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("---------   Connected to MQTT Broker!   ---------")
@@ -16,6 +23,10 @@ def on_connect(client, userdata, flags, rc):
     global connflag
     connflag = True
     # client.subscribe("#", 1) #Suscribe to every topic, just for testing purposes
+    client.subscribe("$aws/things/luz/shadow/get/accepted", 1)
+    client.message_callback_add(
+        "$aws/things/luz/shadow/get/accepted",
+        callbacks.luz_accepted)
     # ----------- Tablero herramientas --------------- #
     client.subscribe("$aws/things/tablero_herramientas/shadow/update", 1)
     client.message_callback_add(
@@ -52,9 +63,6 @@ def on_connect(client, userdata, flags, rc):
         "$aws/things/caldera/shadow/update",
         callbacks.caldera)
 
-
-def on_message(client, userdata, msg):
-    print(msg.topic + " " + str(msg.payload))
 
 # def on_log(client, userdata, level, buf):
 #    print(msg.topic+" "+str(msg.payload))

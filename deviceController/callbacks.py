@@ -6,25 +6,12 @@ from . import actions
 teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
 
-def on_message(client, userdata, message):
-    # Do something
-    print(" Received message " + str(message.payload)
-          + " on topic '" + message.topic
-          + "' with QoS " + str(message.qos))
-    pass
-
-
-def abrir_heladera():
-    print("Abriendo heladera")
-    document = {
-        "state": {
-            "desired": {
-                "electroiman": False
-            }
-        }
-    }
-    mqttc.publish(topic="$aws/things/heladera/shadow/update",
-                  payload=json.dumps(document), qos=1)
+def luz_accepted(client, userdata, msg):
+    from . import mutate_luz
+    print("Aceptada la luz")
+    message = json.loads(msg.payload.decode('utf-8'))
+    message = message["state"]["desired"]
+    mutate_luz(message)
 
 
 def soporte_cuchillos(client, userdata, msg):
@@ -85,7 +72,7 @@ def soporte_pies(client, userdata, msg):
         print("Wrong combination for pies")
         return
     print("Correct combination for pies")
-    abrir_heladera()
+    actions.abrir_heladera()
 
 
 def heladera(client, userdata, msg):
@@ -118,4 +105,4 @@ def caldera(client, userdata, msg):
 
 def caldera(client, userdata, msg):
     # TODO
-    print("Not yet implemented")
+    print("Caldera Not yet implemented")

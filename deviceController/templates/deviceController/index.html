@@ -1,36 +1,63 @@
 {% extends "base.html" %}
 {% block content %}
-   <h1>Control de pasos juegos mentales</h1>
-   <form action="{% url 'skip_step' "tablero_herramientas" %}" method="post">
+   <h1>Control de la sala Hannibal</h1>
+   <hr>
+   <h2>Skipeo de pasos</h2>
+   <div>
+      <form action="{% url 'skip_step' "tablero_herramientas" %}" method="post">
+         {% csrf_token %}
+         <input type="submit" value="Tablero herramientas">
+      </form>
+      <form action="{% url 'skip_step' "licuadora" %}" method="post">
+         {% csrf_token %}
+         <input type="submit" value="Boton licuadora">
+      </form>
+      <form action="{% url 'skip_step' "soporte_especieros" %}" method="post">
+         {% csrf_token %}
+         <input type="submit" value="Soporte especieros">
+      </form>
+      <form action="{% url 'skip_step' "soporte_cuchillos" %}" method="post">
+         {% csrf_token %}
+         <input type="submit" value="Soporte cuchillos">
+      </form>
+      <form action="{% url 'skip_step' "soporte_pies" %}" method="post">
+         {% csrf_token %}
+         <input type="submit" value="Soporte pies">
+      </form>
+      <form action="{% url 'skip_step' "heladera" %}" method="post">
+         {% csrf_token %}
+         <input type="submit" value="Teclado de la heladera">
+      </form>
+      <form action="{% url 'skip_step' "cuadro" %}" method="post">
+         {% csrf_token %}
+         <input type="submit" value="Cuadro dado vuelta">
+      </form>
+      <form action="{% url 'skip_step' "caldera" %}" method="post">
+         {% csrf_token %}
+         <input type="submit" value="Resolucion de caldera [FIN DE JUEGO]">
+      </form>
+   </div>
+   <hr>
+   <h3>Resetear sala</h3>
+   <form action="{% url 'reset_game' %}" method="post">
       {% csrf_token %}
-      <input type="submit" value="Tablero herramientas">
+      <input type="submit" value="RESETEAR SALA">
    </form>
-   <form action="{% url 'skip_step' "licuadora" %}" method="post">
+   <hr>
+   <h2>Control de Luces</h2>
+   <form action="{% url 'update_lights' %}" method="post">
       {% csrf_token %}
-      <input type="submit" value="Boton licuadora">
-   </form>
-   <form action="{% url 'skip_step' "soporte_especieros" %}" method="post">
-      {% csrf_token %}
-      <input type="submit" value="Soporte especieros">
-   </form>
-   <form action="{% url 'skip_step' "soporte_cuchillos" %}" method="post">
-      {% csrf_token %}
-      <input type="submit" value="Soporte cuchillos">
-   </form>
-   <form action="{% url 'skip_step' "soporte_pies" %}" method="post">
-      {% csrf_token %}
-      <input type="submit" value="Soporte pies">
-   </form>
-   <form action="{% url 'skip_step' "heladera" %}" method="post">
-      {% csrf_token %}
-      <input type="submit" value="Teclado de la heladera">
-   </form>
-   <form action="{% url 'skip_step' "cuadro" %}" method="post">
-      {% csrf_token %}
-      <input type="submit" value="Cuadro dado vuelta">
-   </form>
-   <form action="{% url 'skip_step' "caldera" %}" method="post">
-      {% csrf_token %}
-      <input type="submit" value="Resolucion de caldera [FIN DE JUEGO]">
+      {{ formset.management_form }}
+      {% for form in formset %}
+         {{ form }}
+         <br>
+      {% endfor %}
+      <hr>
+      <h4>Luz UV</h4>
+      {{ uv_light_form }}
+      <hr>
+      <h4>Configuraciones</h4>
+      {{ lights_config_form.as_p }}
+      <input type="submit" value="Actualizar valores">
    </form>
 {% endblock content %}
