@@ -23,10 +23,6 @@ def on_connect(client, userdata, flags, rc):
     global connflag
     connflag = True
     # client.subscribe("#", 1) #Suscribe to every topic, just for testing purposes
-    client.subscribe("$aws/things/luz/shadow/get/accepted", 1)
-    client.message_callback_add(
-        "$aws/things/luz/shadow/get/accepted",
-        callbacks.luz_accepted)
     # ----------- Tablero herramientas --------------- #
     client.subscribe("$aws/things/tablero_herramientas/shadow/update", 1)
     client.message_callback_add(
@@ -62,6 +58,16 @@ def on_connect(client, userdata, flags, rc):
     client.message_callback_add(
         "$aws/things/caldera/shadow/update",
         callbacks.caldera)
+
+    # ----------- Luz --------------- #
+    client.subscribe("$aws/things/luz/shadow/update", 1)
+    client.message_callback_add(
+        "$aws/things/luz/shadow/update",
+        callbacks.luz)
+    client.subscribe("$aws/things/luz/shadow/get/accepted", 1)
+    client.message_callback_add(
+        "$aws/things/luz/shadow/get/accepted",
+        callbacks.luz_accepted)
 
 
 # def on_log(client, userdata, level, buf):

@@ -6,6 +6,7 @@ from .forms import LightForm, LightsConfigurationForm
 import logging
 from django.forms import formset_factory
 from . import actions
+from . import steps
 from .mqtt import mqttc
 import json
 logger = logging.getLogger(__name__)
@@ -31,7 +32,7 @@ def update_lights(request):
     if lights_config.is_valid() == False:
         print("Light configuration validation failed")
         validness = False
-    if validness == False:
+    if not validness:
         return HttpResponse("Validation error in the forms :(")
     print("Everything validated just right")
     formset = formset.cleaned_data
@@ -40,19 +41,17 @@ def update_lights(request):
     document = {
         "state": {
             "desired": {
-                "led_lights": [
-                    formset[0],
-                    formset[1]
-                ],
+                "config": lights_config,
                 "rgb_lights": [
+                    formset[0],
+                    formset[1],
                     formset[2],
                     formset[3]
                 ],
-                'uv_light_brightness_level': uv_light['brightness_level']
+                'uv_light': uv_light
             }
         }
     }
-    document["state"]["desired"].update(lights_config)
     print("Publishing this document to AWS ligths shadow:")
     print(json.dumps(document, indent=4))
     mqttc.publish("$aws/things/luz/shadow/update",
@@ -64,25 +63,25 @@ def update_lights(request):
 def index(request):
     # Ask the mqtt-broker for information
     mqttc.publish("$aws/things/luz/shadow/get")
-    sleep(0.5)
-    # Wait until the information is recieved
+    sleep(0.5)  # Wait until the information is recieved
     from . import global_luz
-    print(
-        f"***** The global_luz is: ****** \n{json.dumps(global_luz,indent=4)}\n")
+    # print( f"***** The global_luz is: ****** \n{json.dumps(global_luz,indent=4)}\n")
     # Proceed with the display of the data
     # Different initial data for each form in a Django formset https://stackoverflow.com/a/23497278/15965186
     LightFormSet = formset_factory(LightForm, extra=0)
+    # Get the formset for the RGB Lights
     formset = LightFormSet(
         initial=[
-            global_luz["led_lights"][0],
-            global_luz["led_lights"][1],
             global_luz["rgb_lights"][0],
-            global_luz["rgb_lights"][1]
+            global_luz["rgb_lights"][1],
+            global_luz["rgb_lights"][2],
+            global_luz["rgb_lights"][3]
         ])
+    # Get the form for the UV Light
     uv_light = LightForm(
-        initial={"brightness_level": global_luz["uv_light_brightness_level"]})
-    lights_config = LightsConfigurationForm(initial=global_luz
-                                            )
+        initial=global_luz["uv_light"])
+    # Get the form for the Light config
+    lights_config = LightsConfigurationForm(initial=global_luz["config"])
     context = {
         "formset": formset,
         "uv_light_form": uv_light,
@@ -94,23 +93,21 @@ def index(request):
 def skip_step(request, step_name):
     print("Se ha pedido skipear {}".format(step_name.replace("_", " ")))
     if step_name == "tablero_herramientas":
-        actions.liberar_grillete(2)
-    elif step_name == "licuadora":
-        actions.liberar_grillete(1)
+        steps.tablero_herramientas(skip=True)
+    elif step_name == "boton_licuadora":
+        steps.licuadora(skip=True)
     elif step_name == "soporte_especieros":
-        actions.liberar_grillete(4)
-        actions.abrir_alacena_pared()
+        steps.soporte_especieros(skip=True)
     elif step_name == "soporte_cuchillos":
-        actions.prender_luz_uv()
+        steps.soporte_cuchillos(skip=True)
     elif step_name == "soporte_pies":
-        actions.abrir_heladera()
-    elif step_name == "heladera":
-        actions.abrir_cajon_alacena()
+        steps.soporte_pies(skip=True)
+    elif step_name == "teclado_heladera":
+        steps.teclado_heladera(skip=True)
     elif step_name == "cuadro":
-        actions.abrir_cajon_comoda()
-        actions.abrir_tablero_electrico()
+        steps.cuadro(skip=True)
     elif step_name == "caldera":
-        actions.abrir_caldera()
+        steps.caldera(skip=True)
     else:
         print("ERROR!!! No se ha encontrado esa accion")
 

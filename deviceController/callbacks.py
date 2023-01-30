@@ -1,12 +1,22 @@
+"""_summary_
+This file and its functions should only be used for:
+    * handling the callbacks
+    * Processing their data
+    * Calling other functions that can make use of that data
+Dont intend to use it for making the steps of the game or defining how the actions in the game are going to modify the devices
+Thats the job of steps.py and actions.py respectively
+"""
 import json
 from .mqtt import mqttc
-from collections import deque
 from . import actions
+from . import steps
 # teclas is used in heladera callback
-teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
 
 def luz_accepted(client, userdata, msg):
+    # Callback for the shadow luz/get/accepted
+    # Its used for getting the data for the webapp
+    # This callback is an exception to the rule on how callbacks, actions and steps work in this project
     from . import mutate_luz
     print("Aceptada la luz")
     message = json.loads(msg.payload.decode('utf-8'))
@@ -14,95 +24,70 @@ def luz_accepted(client, userdata, msg):
     mutate_luz(message)
 
 
-def soporte_cuchillos(client, userdata, msg):
+def luz(client, userdata, msg):
+    # This function is for handling the on/off of the light via switch
+    # This callback is an exception to the rule on how callbacks, actions and steps work in this project
     message = json.loads(msg.payload.decode('utf-8'))
-    message = message["state"]["reported"]
-    if message["estado_switch"] != True:
+    if "desired" in message["state"]:
         return
-    actions.prender_luz_uv()
+    message = message["state"]["reported"]
+    if "estado_switch" not in message:
+        print("Not doing anything in luz callback cause its just reporting its state")
+        return
+    if message["estado_switch"] == True:
+        actions.prender_luz()
+    if message["estado_switch"] == False:
+        actions.apagar_luz()
+
+
+def soporte_cuchillos(client, userdata, msg):
+    print("Callback from soporte_cuchillos")
+    # Process the payload
+    message = json.loads(msg.payload.decode('utf-8'))
+    if "desired" in message["state"]:
+        return
+    message = message["state"]["reported"]
+    # Call the step
+    steps.soporte_cuchillos(message)
 
 
 def especiero(client, userdata, msg):
-    especieros = {
-        "rfid_0": "93 4E E3 1B",
-        "rfid_1": "24 DD C5 DB",
-        "rfid_2": "F3 FB 59 9B",
-        "rfid_3": "33 61 E6 1B"
-    }
     # decode the message into a python dictionary
     message = json.loads(msg.payload.decode('utf-8'))
-    message = message["state"]["reported"]
-    if message != especieros:
-        print("Wrong combination for especieros")
+    if "desired" in message["state"]:
         return
-    print("Correct combination for especieros")
-    # Este va al electroiman de la alacena que tiene la llave tuerca para el jugador 4
-    actions.liberar_grillete(4)
-    actions.abrir_alacena_pared()
+    message = message["state"]["reported"]
+    steps.soporte_especieros(message)
 
 
 def tablero_herramientas(client, userdata, msg):
-    herramientas = {
-        "rfid_0": "93 4E E3 1B",
-        "rfid_1": "24 DD C5 DB",
-        "rfid_2": "F3 FB 59 9B",
-        "rfid_3": "33 61 E6 1B"
-    }
     # decode the message into a python dictionary
     message = json.loads(msg.payload.decode('utf-8'))
-    message = message["state"]["reported"]
-    if message != herramientas:
-        print("Wrong combination for herramientas")
+    if "desired" in message["state"]:
         return
-    print("Correct combination for herramientas")
-    actions.liberar_grillete(2)
+    message = message["state"]["reported"]
+    steps.tablero_herramientas(message)
 
 
 def soporte_pies(client, userdata, msg):
-    pies = {
-        "rfid_0": "93 4E E3 1B",
-        "rfid_1": "24 DD C5 DB",
-        "rfid_2": "F3 FB 59 9B",
-        "rfid_3": "33 61 E6 1B"
-    }
     message = json.loads(msg.payload.decode('utf-8'))
-    message = message["state"]["reported"]
-    message = message["state"]["reported"]
-    if message != pies:
-        print("Wrong combination for pies")
+    if "desired" in message["state"]:
         return
-    print("Correct combination for pies")
-    actions.abrir_heladera()
+    message = message["state"]["reported"]
+    steps.soporte_pies()
 
 
 def heladera(client, userdata, msg):
-    clave = ['1', '1', '1', '2', '2', '1']
     message = json.loads(msg.payload.decode('utf-8'))
-    tecla = message["key"]
-    teclas.append(tecla)
-    print(list(teclas))
-    if list(teclas) == clave:
-        print("Clave correcta!!!")
-        actions.abrir_cajon_alacena()
-        actions.abrir_tablero_electrico()
+    if "desired" in message["state"]:
+        return
+    tecla = message["key"]  # Get the inputted tecla
+    steps.teclado_heladera(tecla)
 
 
 def caldera(client, userdata, msg):
     message = json.loads(msg.payload.decode('utf-8'))
+    if "desired" in message["state"]:
+        return
     message = message["state"]["reported"]
-    if (
-        message["proximidad_1"] == True and
-        message["proximidad_2"] == False and
-        message["proximidad_3"] == True and
-        message["proximidad_4"] == False and
-        message["atenuador_1"] == True and
-        message["atenuador_2"] == True and
-        message["interruptor_1"] == False and
-        message["interruptor_2"] == False
-    ):
-        actions.abrir_caldera()
-
-
-def caldera(client, userdata, msg):
-    # TODO
-    print("Caldera Not yet implemented")
+    steps.caldera(message)

@@ -8,7 +8,7 @@
          {% csrf_token %}
          <input type="submit" value="Tablero herramientas">
       </form>
-      <form action="{% url 'skip_step' "licuadora" %}" method="post">
+      <form action="{% url 'skip_step' "boton_licuadora" %}" method="post">
          {% csrf_token %}
          <input type="submit" value="Boton licuadora">
       </form>
@@ -24,7 +24,7 @@
          {% csrf_token %}
          <input type="submit" value="Soporte pies">
       </form>
-      <form action="{% url 'skip_step' "heladera" %}" method="post">
+      <form action="{% url 'skip_step' "teclado_heladera" %}" method="post">
          {% csrf_token %}
          <input type="submit" value="Teclado de la heladera">
       </form>
