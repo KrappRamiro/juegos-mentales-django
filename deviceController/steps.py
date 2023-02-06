@@ -31,6 +31,16 @@ from collections import deque
 teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
 
+def licuadora(message={}, skip=False):
+    def solve():
+        actions.liberar_grillete(0)  # TODO: Ver que grillete se liberaba
+    if skip:
+        solve()
+        return
+    if message["estado_boton"] == True:
+        solve()
+
+
 def soporte_cuchillos(message={}, skip=False):
     def solve():
         actions.prender_luz_uv()
@@ -50,11 +60,11 @@ def soporte_especieros(message={}, skip=False):
     if skip:
         solve()
         return
-    especieros = {  # TODO: Change the RFID to the corresponding one
-        "rfid_0": "93 4E E3 1B",
-        "rfid_1": "24 DD C5 DB",
-        "rfid_2": "F3 FB 59 9B",
-        "rfid_3": "33 61 E6 1B"
+    especieros = {
+        "rfid_0": "3A 38 DA 80",
+        "rfid_1": "6A EA 01 81",
+        "rfid_2": "C9 33 1F 88",
+        "rfid_3": "F9 A9 29 87"
     }
     if message != especieros:
         print("Wrong combination for especieros")
@@ -72,10 +82,10 @@ def tablero_herramientas(message={}, skip=False):
         solve()
         return
     herramientas = {
-        "rfid_0": "93 4E E3 1B",
-        "rfid_1": "24 DD C5 DB",
-        "rfid_2": "F3 FB 59 9B",
-        "rfid_3": "33 61 E6 1B"
+        "rfid_0": "CA E5 EC 80",
+        "rfid_1": "A3 9C D6 1B",
+        "rfid_2": "00 00 00 00",
+        "rfid_3": "5A 1C E5 80"
     }
     if message != herramientas:
         print("Wrong combination for herramientas")
@@ -97,11 +107,11 @@ def licuadora(message={}, skip=False):
 def cuadro(message={}, skip=False):
     def solve():
         actions.abrir_cajon("C3")
+        actions.abrir_tablero_electrico()
     if skip:
         solve()
         return
-    # TODO: Change the RFID to the corresponding one
-    if message["rfid"] == "AA BB CC DD":
+    if message["rfid"] == "90 A3 FB 1B":
         print("Cuadro is in the correct position")
         solve()
     else:
@@ -115,13 +125,14 @@ def soporte_pies(message={}, skip=False):
     if skip:
         solve()
         return
-    pies = {  # TODO: Change the RFID to the corresponding one
-
-        "rfid_0": "93 4E E3 1B",
-        "rfid_1": "24 DD C5 DB",
-        "rfid_2": "F3 FB 59 9B",
-        "rfid_3": "33 61 E6 1B"
+    pies = {
+        "rfid_0": "AA 2F FD 80",
+        "rfid_1": "49 88 29 87",
+        "rfid_2": "79 10 22 A4",
+        "rfid_3": "F9 67 13 87"
     }
+    print(f"message = {message}")
+    print(f"pies = {pies}")
     if message != pies:
         print("Wrong combination for pies")
         return
@@ -132,12 +143,12 @@ def soporte_pies(message={}, skip=False):
 def teclado_heladera(tecla_in="", skip=False):
     def solve():
         actions.abrir_cajon("C2")
-        actions.abrir_tablero_electrico()
 
     if skip:
         solve()
         return
     clave = ['1', '1', '1', '2', '2', '1']
+    print(f"La tecla introducida es la tecla {tecla_in}")
     teclas.append(tecla_in)
     if list(teclas) == clave:
         print("Clave correcta!!!")
@@ -151,10 +162,10 @@ def caldera(message={}, skip=False):
     if skip:
         solve()
         return
-    combinacion_interruptores = [True, False, True,
-                                 False, False, False, True, False, False, False]
-    combinacion_llaves_paso = [True, True, True, True]
-    if message["interruptores"] != combinacion_interruptores:
+
+    print(f"El mensaje de la heladera es {message}")
+    combinacion_llaves_paso = [False, False, False, False]
+    if message["interruptores"] == True:
         print("Los interruptores estan mal")
         return
     print("Los interruptores estan bien")

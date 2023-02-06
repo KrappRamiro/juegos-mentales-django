@@ -3,7 +3,7 @@ from django import forms
 
 class LightForm(forms.Form):
     brightness = forms.IntegerField(label="Nivel de brillo")
-    has_to_flicker = forms.BooleanField(label="Parpadea?", required=False)
+    flicker = forms.BooleanField(label="Parpadea?", required=False)
 
 
 class LightsConfigurationForm(forms.Form):

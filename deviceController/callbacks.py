@@ -10,7 +10,6 @@ import json
 from .mqtt import mqttc
 from . import actions
 from . import steps
-# teclas is used in heladera callback
 
 
 def luz_accepted(client, userdata, msg):
@@ -31,17 +30,18 @@ def luz(client, userdata, msg):
     if "desired" in message["state"]:
         return
     message = message["state"]["reported"]
-    if "estado_switch" not in message:
-        print("Not doing anything in luz callback cause its just reporting its state")
+    print(f"The light message is {message}")
+    if "switch_status" not in message:
+        print("Not doing anything in luz callback cause there is no switch_status to interact with")
         return
-    if message["estado_switch"] == True:
+    if message["switch_status"] == True:
         actions.prender_luz()
-    if message["estado_switch"] == False:
+    if message["switch_status"] == False:
         actions.apagar_luz()
 
 
 def soporte_cuchillos(client, userdata, msg):
-    print("Callback from soporte_cuchillos")
+    print("Handling soporte_cuchillos callback")
     # Process the payload
     message = json.loads(msg.payload.decode('utf-8'))
     if "desired" in message["state"]:
@@ -52,6 +52,7 @@ def soporte_cuchillos(client, userdata, msg):
 
 
 def especiero(client, userdata, msg):
+    print("Handling especiero callback")
     # decode the message into a python dictionary
     message = json.loads(msg.payload.decode('utf-8'))
     if "desired" in message["state"]:
@@ -61,6 +62,7 @@ def especiero(client, userdata, msg):
 
 
 def tablero_herramientas(client, userdata, msg):
+    print("Handling tablero_herramientas callback")
     # decode the message into a python dictionary
     message = json.loads(msg.payload.decode('utf-8'))
     if "desired" in message["state"]:
@@ -70,24 +72,48 @@ def tablero_herramientas(client, userdata, msg):
 
 
 def soporte_pies(client, userdata, msg):
+    print("Handling soporte_pies callback")
     message = json.loads(msg.payload.decode('utf-8'))
     if "desired" in message["state"]:
         return
     message = message["state"]["reported"]
-    steps.soporte_pies()
+    steps.soporte_pies(message)
 
 
 def heladera(client, userdata, msg):
+    print("Handling heladera callback")
     message = json.loads(msg.payload.decode('utf-8'))
-    if "desired" in message["state"]:
-        return
+    # Should not be needed because its not a shadow
+    # if "desired" in message["state"]:
+    #     return
     tecla = message["key"]  # Get the inputted tecla
     steps.teclado_heladera(tecla)
 
 
 def caldera(client, userdata, msg):
+    print("Handling caldera callback")
     message = json.loads(msg.payload.decode('utf-8'))
     if "desired" in message["state"]:
         return
     message = message["state"]["reported"]
+    if "electroiman_caldera" in message:
+        return
+    if "electroiman_tablero" in message:
+        return
     steps.caldera(message)
+
+
+def licuadora(client, userdata, msg):
+    print("Handling licuadora callback")
+    message = json.loads(msg.payload.decode('utf-8'))
+    if "desired" in message["state"]:
+        return
+    steps.licuadora(message)
+
+
+def cuadro(client, userdata, msg):
+    print("Handling cuadro callback")
+    message = json.loads(msg.payload.decode('utf-8'))
+    if "desired" in message["state"]:
+        return
+    steps.cuadro(message)

@@ -69,6 +69,18 @@ def on_connect(client, userdata, flags, rc):
         "$aws/things/luz/shadow/get/accepted",
         callbacks.luz_accepted)
 
+    # ----------- Cuadro --------------- #
+    client.subscribe("$aws/things/cuadro/shadow/update", 1)
+    client.message_callback_add(
+        "$aws/things/cuadro/shadow/update",
+        callbacks.cuadro)
+
+    # ----------- Licuadora --------------- #
+    client.subscribe("$aws/things/licuadora/shadow/update", 1)
+    client.message_callback_add(
+        "$aws/things/licuadora/shadow/update",
+        callbacks.licuadora)
+
 
 # def on_log(client, userdata, level, buf):
 #    print(msg.topic+" "+str(msg.payload))

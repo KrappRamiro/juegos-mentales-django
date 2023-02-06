@@ -35,7 +35,7 @@ def desire_to_shadow(thingname, dictionary):
 def liberar_grillete(n_grillete):
     print(f"Liberando grillete #{n_grillete}")
     document = {
-        f"grillete_{n_grillete}": False
+        f"grillete_{n_grillete}": True
     }
     desire_to_shadow("grilletes", document)
 
@@ -61,18 +61,19 @@ def abrir_cajon(cajon):
         Señor, incluidas las subestaciones en este orden, el sistema comienza a actuar,
         no permita que los interruptores de palanca (térmicas) estén en esta posición
     """
+    print(f"Abriendo cajon {cajon}")
     if cajon == "C1":
         document = {
-            "electroiman_1": False
+            "electroiman_1": True
         }
     if cajon == "C2":
         document = {
-            "electroiman_2": False
+            "electroiman_2": True
         }
 
     if cajon == "C3":
         document = {
-            "electroiman_3": False
+            "electroiman_3": True
         }
     desire_to_shadow("cajones_bajomesada", document)
 
@@ -90,7 +91,7 @@ def poner_luces_rojo():
 def abrir_caldera():
     print("Abriendo la caldera")
     document = {
-        "electroiman_caldera": False
+        "electroiman_caldera": True
     }
     desire_to_shadow("caldera", document)
     poner_luces_rojo()
@@ -111,8 +112,7 @@ def apagar_luz():
     print("Apagando la luz")
     document = {
         "config": {
-            "fixed_brightness": 0,
-            "mode": "fixed"
+            "mode": "off"
         }
     }
     desire_to_shadow("luz", document)
@@ -131,7 +131,7 @@ def prender_luz_uv():
 def abrir_heladera():
     print("Abriendo la heladera")
     document = {
-        "electroiman": False
+        "electroiman": True
     }
     desire_to_shadow("heladera", document)
 
@@ -139,13 +139,23 @@ def abrir_heladera():
 def abrir_tablero_electrico():
     print("Abriendo el tablero electrico")
     document = {
-        "electroiman_tablero_electrico": False
+        "electroiman_tablero": True
     }
     desire_to_shadow("caldera", document)
 
 
+def resetear_radio():
+    # pregunta, si yo le vuelvo a mandar el mismo track, se reinicia?
+    # capaz haya que cambiar el codigo del arduino nano
+    # para que track 2 sea reiniciar la pista de audio
+    print("Reiniciando la radio")
+    document = {
+        "track_n": 1
+    }
+    desire_to_shadow("radio", document)
+
+
 def reset_game():
-    # TODO: Re-do this function
     """_summary_
     This function should publish an /update to all the shadows, with a
     {
@@ -159,55 +169,52 @@ def reset_game():
     """
     # region reset caldera
     document = {
-        "state": {
-            "desired": {
-                "electroiman_caldera": True
-            }
-        }
+        "electroiman_caldera": False,
+        "electroiman_tablero": False
     }
-    mqttc.publish(topic="$aws/things/caldera/shadow/update",
-                  payload=json.dumps(document), qos=1)
+    desire_to_shadow("caldera", document)
     # endregion reset caldera
 
     # region reset grilletes
     document = {
-        "state": {
-            "desired": {
-                "grillete_1": True,
-                "grillete_2": True,
-                "grillete_3": True,
-                "grillete_4": True
-            }
-        }
+        "grillete_1": False,
+        "grillete_2": False,
+        "grillete_3": False,
+        "grillete_4": False
     }
 
-    mqttc.publish(topic="$aws/things/grilletes/shadow/update",
-                  payload=json.dumps(document), qos=1)
+    desire_to_shadow("grilletes", document)
     # endregion reset grilletes
 
     # region reset luz
+    # Lo pongo con el brillo al máximo asi la encargada puede acomodar el lugar y despues apagar la luz a mano
     document = {
-        "state": {
-            "desired": {
-                "mode": "fixed",
-                "fixed_brightness_level": 0,
-                "uv_light_active": False,
-                "uv_light_brightness": 0
-            }
+        "config": {
+            "mode": "fixed",
+            "fixed_brightness": 255,
         }
     }
-    mqttc.publish(topic="$aws/things/luz/shadow/update",
-                  payload=json.dumps(document), qos=1)
+    desire_to_shadow("luz", document)
     # endregion reset luz
 
     # region reset heladera
     document = {
-        "state": {
-            "desired": {
-                "electroiman": True
-            }
-        }
+        "electroiman": False
     }
-    mqttc.publish(topic="$aws/things/heladera/shadow/update",
-                  payload=json.dumps(document), qos=1)
+    desire_to_shadow("heladera", document)
     # endregion reset heladera
+
+    # region reset cajones_bajomesada
+    document = {
+        "electroiman_1": False,
+        "electroiman_2": False,
+        "electroiman_3": False
+    }
+    desire_to_shadow("cajones_bajomesada", document)
+    # endregion
+
+    # Reset the RFID memory
+    mqttc.publish(topic="especiero/reset")
+    mqttc.publish(topic="cuadro/reset")
+    mqttc.publish(topic="soporte_pies/reset")
+    mqttc.publish(topic="tablero_herramientas/reset")
