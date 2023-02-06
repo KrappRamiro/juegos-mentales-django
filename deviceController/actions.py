@@ -144,7 +144,7 @@ def abrir_tablero_electrico():
     desire_to_shadow("caldera", document)
 
 
-def resetear_radio():
+def iniciar_radio():
     # pregunta, si yo le vuelvo a mandar el mismo track, se reinicia?
     # capaz haya que cambiar el codigo del arduino nano
     # para que track 2 sea reiniciar la pista de audio
@@ -156,6 +156,7 @@ def resetear_radio():
 
 
 def reset_game():
+    from . import retornar_flag_luz_prendida, activar_flag_luz_prendida, desactivar_flag_luz_prendida
     """_summary_
     This function should publish an /update to all the shadows, with a
     {
@@ -192,6 +193,9 @@ def reset_game():
         "config": {
             "mode": "fixed",
             "fixed_brightness": 255,
+        },
+        "uv_light": {
+            "brightness": 0
         }
     }
     desire_to_shadow("luz", document)
@@ -213,8 +217,23 @@ def reset_game():
     desire_to_shadow("cajones_bajomesada", document)
     # endregion
 
+    # region reset radio
+    document = {
+        "track_n": 0
+    }
+    desire_to_shadow("radio", document)
+    # endregion
+    # region reset sistema_audio
+
+    document = {
+        "track_n": 0
+    }
+    desire_to_shadow("sistema_audio", document)
+    # endregion
+
     # Reset the RFID memory
     mqttc.publish(topic="especiero/reset")
     mqttc.publish(topic="cuadro/reset")
     mqttc.publish(topic="soporte_pies/reset")
     mqttc.publish(topic="tablero_herramientas/reset")
+    desactivar_flag_luz_prendida()

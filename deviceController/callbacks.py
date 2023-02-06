@@ -24,6 +24,7 @@ def luz_accepted(client, userdata, msg):
 
 
 def luz(client, userdata, msg):
+    from . import retornar_flag_luz_prendida, activar_flag_luz_prendida, desactivar_flag_luz_prendida
     # This function is for handling the on/off of the light via switch
     # This callback is an exception to the rule on how callbacks, actions and steps work in this project
     message = json.loads(msg.payload.decode('utf-8'))
@@ -34,8 +35,12 @@ def luz(client, userdata, msg):
     if "switch_status" not in message:
         print("Not doing anything in luz callback cause there is no switch_status to interact with")
         return
+    if retornar_flag_luz_prendida() == True:
+        print("Not doing anything because the luz was already turned on")
+        return
     if message["switch_status"] == True:
         actions.prender_luz()
+        activar_flag_luz_prendida()
     if message["switch_status"] == False:
         actions.apagar_luz()
 
@@ -93,13 +98,11 @@ def heladera(client, userdata, msg):
 def caldera(client, userdata, msg):
     print("Handling caldera callback")
     message = json.loads(msg.payload.decode('utf-8'))
+    print(f"En el callback de caldera, el mensaje es {message}")
     if "desired" in message["state"]:
+        print("caldera es desired, retornando")
         return
     message = message["state"]["reported"]
-    if "electroiman_caldera" in message:
-        return
-    if "electroiman_tablero" in message:
-        return
     steps.caldera(message)
 
 
@@ -108,6 +111,7 @@ def licuadora(client, userdata, msg):
     message = json.loads(msg.payload.decode('utf-8'))
     if "desired" in message["state"]:
         return
+    message = message["state"]["reported"]
     steps.licuadora(message)
 
 
@@ -116,4 +120,5 @@ def cuadro(client, userdata, msg):
     message = json.loads(msg.payload.decode('utf-8'))
     if "desired" in message["state"]:
         return
+    message = message["state"]["reported"]
     steps.cuadro(message)

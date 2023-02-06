@@ -54,16 +54,16 @@ def soporte_cuchillos(message={}, skip=False):
 
 def soporte_especieros(message={}, skip=False):
     def solve():
-        actions.liberar_grillete(4)
+        # actions.liberar_grillete(4) # Se libera usando candado de forma manual
         actions.abrir_cajon("C1")
 
     if skip:
         solve()
         return
     especieros = {
-        "rfid_0": "3A 38 DA 80",
+        "rfid_0": "C9 33 1F 88",
         "rfid_1": "6A EA 01 81",
-        "rfid_2": "C9 33 1F 88",
+        "rfid_2": "3A 38 DA 80",
         "rfid_3": "F9 A9 29 87"
     }
     if message != especieros:
@@ -76,7 +76,7 @@ def soporte_especieros(message={}, skip=False):
 
 def tablero_herramientas(message={}, skip=False):
     def solve():
-        actions.liberar_grillete(2)
+        actions.liberar_grillete(1)
 
     if skip:
         solve()
@@ -94,16 +94,6 @@ def tablero_herramientas(message={}, skip=False):
     solve()
 
 
-def licuadora(message={}, skip=False):
-    def solve():
-        actions.liberar_grillete(3)
-    if skip:
-        solve()
-        return
-    if message["boton"] == True:
-        solve()
-
-
 def cuadro(message={}, skip=False):
     def solve():
         actions.abrir_cajon("C3")
@@ -111,7 +101,7 @@ def cuadro(message={}, skip=False):
     if skip:
         solve()
         return
-    if message["rfid"] == "90 A3 FB 1B":
+    if message["rfid_0"] == "90 A3 FB 1B":
         print("Cuadro is in the correct position")
         solve()
     else:
@@ -158,14 +148,15 @@ def teclado_heladera(tecla_in="", skip=False):
 def caldera(message={}, skip=False):
     def solve():
         actions.abrir_caldera()
+        actions.poner_luces_rojo()
 
     if skip:
         solve()
         return
 
-    print(f"El mensaje de la heladera es {message}")
+    print(f"El mensaje de la caldera es {message}")
     combinacion_llaves_paso = [False, False, False, False]
-    if message["interruptores"] == True:
+    if message["interruptores"] == False:
         print("Los interruptores estan mal")
         return
     print("Los interruptores estan bien")
@@ -178,7 +169,7 @@ def caldera(message={}, skip=False):
         print("Los atenuadores estan mal")
         return
     print("Los atenuadores estan bien")
-    if message["botones"] != True:  # Estan hardcodeados en el cableado
+    if message["botones"] == False:  # Estan hardcodeados en el cableado
         print("Los botones estan mal")
         return
     print("Los botones estan bien")

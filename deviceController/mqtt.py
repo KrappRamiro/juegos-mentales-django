@@ -102,7 +102,9 @@ keyPath = "certificates/private.pem"
 mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath,
               cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
 
+print("Trying to connect with mqttc.connect")
 mqttc.connect(awshost, awsport, keepalive=60)
+print("Finished trying to connect to mqttc.connect")
 
 # This is here to avoid circular imports
 from . import callbacks

@@ -10,7 +10,8 @@ class LightsConfigurationForm(forms.Form):
     MODES_CHOICES = (
         ("fixed", "Fijo"),
         ("scary", "Asustadizo"),
-        ("panic", "Panico (luces en rojo)")
+        ("panic", "Panico (luces en rojo)"),
+        ("off", "Luces apagadas")
     )
     mode = forms.ChoiceField(choices=MODES_CHOICES, label="Modo")
     fixed_brightness = forms.IntegerField(
