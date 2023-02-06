@@ -33,7 +33,7 @@ teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
 def licuadora(message={}, skip=False):
     def solve():
-        actions.liberar_grillete(0)  # TODO: Ver que grillete se liberaba
+        actions.liberar_grillete(3)
     if skip:
         solve()
         return
