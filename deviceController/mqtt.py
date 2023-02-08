@@ -60,9 +60,9 @@ def on_connect(client, userdata, flags, rc):
         callbacks.caldera)
 
     # ----------- Luz --------------- #
-    client.subscribe("$aws/things/luz/shadow/update", 1)
+    client.subscribe("luz/switch", 1)
     client.message_callback_add(
-        "$aws/things/luz/shadow/update",
+        "luz/switch",
         callbacks.luz)
     client.subscribe("$aws/things/luz/shadow/get/accepted", 1)
     client.message_callback_add(
@@ -103,7 +103,8 @@ mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath,
               cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
 
 print("Trying to connect with mqttc.connect")
-mqttc.connect(awshost, awsport, keepalive=60)
+# Change this when using real code
+mqttc.connect_async(awshost, awsport, keepalive=60)
 print("Finished trying to connect to mqttc.connect")
 
 # This is here to avoid circular imports

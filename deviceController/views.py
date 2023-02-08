@@ -61,6 +61,11 @@ def update_lights(request):
 
 
 def index(request):
+    return render(request, "deviceController/index.html")
+
+
+def light_control(request):
+
     # Ask the mqtt-broker for information
     mqttc.publish("$aws/things/luz/shadow/get")
     sleep(0.5)  # Wait until the information is recieved
@@ -87,7 +92,7 @@ def index(request):
         "uv_light_form": uv_light,
         "lights_config_form": lights_config
     }
-    return render(request, "deviceController/index.html", context)
+    return render(request, "deviceController/light_control.html", context)
 
 
 def skip_step(request, step_name):
@@ -118,3 +123,37 @@ def reset_game(request):
     print("Reseteando la sala")
     actions.reset_game()
     return redirect(index)
+
+
+def liberar_grillete(request, number):
+    actions.liberar_grillete(number)
+    return redirect(index)
+
+
+def abrir_cajon(request, cajon):
+    actions.abrir_cajon(cajon)
+    return redirect(index)
+
+
+def iniciar_sala(request):
+    document = {
+        "track_n": 1
+    }
+    actions.desire_to_shadow("radio", document)
+    return redirect(index)
+
+
+def radio_vol_up(request):
+    mqttc.publish(topic="radio/vol_up")
+
+
+def radio_vol_down(request):
+    mqttc.publish(topic="radio/vol_down")
+
+
+def sistema_audio_vol_up(request):
+    mqttc.publish(topic="sistema_audio/vol_up")
+
+
+def sistema_audio_vol_down(request):
+    mqttc.publish(topic="sistema_audio/vol_down")

@@ -157,6 +157,7 @@ def iniciar_radio():
 
 def reset_game():
     from . import retornar_flag_luz_prendida, activar_flag_luz_prendida, desactivar_flag_luz_prendida
+    from . import actions
     """_summary_
     This function should publish an /update to all the shadows, with a
     {
@@ -168,6 +169,8 @@ def reset_game():
         }
     document, which contains the initial value of the sala
     """
+    desactivar_flag_luz_prendida()
+    actions.apagar_luz()
     # region reset caldera
     document = {
         "electroiman_caldera": False,
@@ -191,8 +194,7 @@ def reset_game():
     # Lo pongo con el brillo al máximo asi la encargada puede acomodar el lugar y despues apagar la luz a mano
     document = {
         "config": {
-            "mode": "fixed",
-            "fixed_brightness": 255,
+            "mode": "off",
         },
         "uv_light": {
             "brightness": 0
@@ -236,4 +238,3 @@ def reset_game():
     mqttc.publish(topic="cuadro/reset")
     mqttc.publish(topic="soporte_pies/reset")
     mqttc.publish(topic="tablero_herramientas/reset")
-    desactivar_flag_luz_prendida()

@@ -27,22 +27,11 @@ def luz(client, userdata, msg):
     from . import retornar_flag_luz_prendida, activar_flag_luz_prendida, desactivar_flag_luz_prendida
     # This function is for handling the on/off of the light via switch
     # This callback is an exception to the rule on how callbacks, actions and steps work in this project
-    message = json.loads(msg.payload.decode('utf-8'))
-    if "desired" in message["state"]:
-        return
-    message = message["state"]["reported"]
-    print(f"The light message is {message}")
-    if "switch_status" not in message:
-        print("Not doing anything in luz callback cause there is no switch_status to interact with")
-        return
     if retornar_flag_luz_prendida() == True:
         print("Not doing anything because the luz was already turned on")
         return
-    if message["switch_status"] == True:
-        actions.prender_luz()
-        activar_flag_luz_prendida()
-    if message["switch_status"] == False:
-        actions.apagar_luz()
+    activar_flag_luz_prendida()
+    actions.prender_luz()
 
 
 def soporte_cuchillos(client, userdata, msg):
