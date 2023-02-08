@@ -4,91 +4,59 @@
    <hr>
    <h2>Skipeo de pasos</h2>
    <div>
-      <form action="{% url 'skip_step' "tablero_herramientas" %}" method="post">
-         {% csrf_token %}
-         <input type="submit" value="Tablero herramientas">
-      </form>
-      <form action="{% url 'skip_step' "boton_licuadora" %}" method="post">
-         {% csrf_token %}
-         <input type="submit" value="Boton licuadora">
-      </form>
-      <form action="{% url 'skip_step' "soporte_especieros" %}" method="post">
-         {% csrf_token %}
-         <input type="submit" value="Soporte especieros">
-      </form>
-      <form action="{% url 'skip_step' "soporte_cuchillos" %}" method="post">
-         {% csrf_token %}
-         <input type="submit" value="Soporte cuchillos">
-      </form>
-      <form action="{% url 'skip_step' "soporte_pies" %}" method="post">
-         {% csrf_token %}
-         <input type="submit" value="Soporte pies (abre heladera)">
-      </form>
-      <form action="{% url 'skip_step' "teclado_heladera" %}" method="post">
-         {% csrf_token %}
-         <input type="submit" value="Teclado de la heladera">
-      </form>
-      <form action="{% url 'skip_step' "cuadro" %}" method="post">
-         {% csrf_token %}
-         <input type="submit" value="Cuadro dado vuelta">
-      </form>
-      <form action="{% url 'skip_step' "caldera" %}" method="post">
-         {% csrf_token %}
-         <input type="submit" value="Resolucion de caldera [FIN DE JUEGO]">
-      </form>
+      <a href="{% url 'skip_step' "tablero_herramientas" %}"
+         class="btn btn-outline-primary">Tablero herramientas</a>
+      <br>
+      <a href="{% url 'skip_step' "boton_licuadora" %}"
+         class="btn btn-outline-primary">Boton licuadora</a>
+      <br>
+      <a href="{% url 'skip_step' "soporte_especieros" %}"
+         class="btn btn-outline-primary">Soporte especieros</a>
+      <br>
+      <a href="{% url 'skip_step' "soporte_cuchillos" %}"
+         class="btn btn-outline-primary">Soporte cuchillos</a>
+      <br>
+      <a href="{% url 'skip_step' "soporte_pies" %}"
+         class="btn btn-outline-primary">Soporte pies (abre heladera)</a>
+      <br>
+      <a href="{% url 'skip_step' "teclado_heladera" %}"
+         class="btn btn-outline-primary">Teclado de la heladera</a>
+      <br>
+      <a href="{% url 'skip_step' "cuadro" %}" class="btn btn-outline-primary">Cuadro dado vuelta</a>
+      <br>
+      <a href="{% url 'skip_step' "caldera" %}"
+         class="btn btn-outline-primary">Resolucion de caldera [FIN DE JUEGO]</a>
+      <br>
    </div>
    <hr>
    <h2>Control Grilletes</h2>
    <div>
-      <button type="button">
-         <a href="{% url 'liberar_grillete' 1 %}">Liberar grillete 1</a>
-      </button>
-      <button type="button">
-         <a href="{% url 'liberar_grillete' 2 %}">Liberar grillete 2</a>
-      </button>
-      <button type="button">
-         <a href="{% url 'liberar_grillete' 3 %}">Liberar grillete 3</a>
-      </button>
-      <button type="button">
-         <a href="{% url 'liberar_grillete' 4 %}">Liberar grillete 4</a>
-      </button>
+      <a href="{% url 'liberar_grillete' 1 %}" class="btn btn-outline-primary">Liberar grillete 1</a>
+      <a href="{% url 'liberar_grillete' 2 %}" class="btn btn-outline-primary">Liberar grillete 2</a>
+      <a href="{% url 'liberar_grillete' 3 %}" class="btn btn-outline-primary">Liberar grillete 3</a>
+      <a href="{% url 'liberar_grillete' 4 %}" class="btn btn-outline-primary">Liberar grillete 4</a>
    </div>
    <hr>
    <h2>Control bajomesada</h2>
    <div>
-      <button type="button">
-         <a href="{% url 'abrir_cajon' "C1" %}">Abrir cajon 1</a>
-      </button>
-      <button type="button">
-         <a href="{% url 'abrir_cajon' "C2" %}">Abrir cajon 2</a>
-      </button>
-      <button type="button">
-         <a href="{% url 'abrir_cajon' "C3" %}">Abrir cajon 3</a>
-      </button>
+      <a href="{% url 'abrir_cajon' "C1" %}" class="btn btn-outline-primary">Abrir cajon 1</a>
+      <a href="{% url 'abrir_cajon' "C2" %}" class="btn btn-outline-primary">Abrir cajon 2</a>
+      <a href="{% url 'abrir_cajon' "C3" %}" class="btn btn-outline-primary">Abrir cajon 3</a>
    </div>
    <hr>
    <h3>Reinicio de sala</h3>
-   <form action="{% url 'reset_game' %}" method="post">
-      {% csrf_token %}
-      <input type="submit" value="RESETEAR SALA">
-   </form>
+   <a href="{% url 'reset_game' %}" class="btn btn-outline-danger">Reiniciar sala</a>
    <h3>Inicio de sala</h3>
-   <button type="button">
-      <a href="{% url 'iniciar_sala' %}">Iniciar sala</a>
-   </button>
+   <a href="{% url 'iniciar_sala' %}" class="btn btn-outline-success">Iniciar sala</a>
    <h3>Control volumen</h3>
    <h4>Radio</h4>
-   <button type="button">
-      <a href="{% url 'radio_vol_up' %}">VOL UP</a>
-   </button>
-   <button type="button">
-      <a href="{% url 'radio_vol_down' %}">VOL DOWN</a>
-   </button>
-   <h4>Sistema de audio</h4>
-   <button type="button">
-      <a href="{% url 'sistema_audio_vol_up' %}">VOL UP</a>
-   </button>
-   <button type="button">
-      <a href="{% url 'sistema_audio_vol_down' %}">VOL DOWN</a>
-   </button>
+   <a href="{% url 'radio_vol_up' %}" class="btn btn-outline-primary">VOL UP</a>
+   <a href="{% url 'radio_vol_down' %}" class="btn btn-outline-primary">VOL DOWN</a>
+   <h4>
+      Sistema de audio
+   </h4>
+   <a href="{% url 'sistema_audio_vol_up' %}"
+      class="btn btn-outline-primary">VOL UP</a>
+   <a href="{% url 'sistema_audio_vol_down' %}"
+      class="btn btn-outline-primary">VOL DOWN</a>
 {% endblock content %}

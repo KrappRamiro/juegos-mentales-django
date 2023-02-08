@@ -57,7 +57,7 @@ def update_lights(request):
     mqttc.publish("$aws/things/luz/shadow/update",
                   payload=json.dumps(document), qos=1)
     sleep(0.5)
-    return redirect(index)
+    return redirect(light_control)
 
 
 def index(request):
@@ -70,7 +70,8 @@ def light_control(request):
     mqttc.publish("$aws/things/luz/shadow/get")
     sleep(0.5)  # Wait until the information is recieved
     from . import global_luz
-    # print( f"***** The global_luz is: ****** \n{json.dumps(global_luz,indent=4)}\n")
+    print(
+        f"***** The global_luz is: ****** \n{json.dumps(global_luz,indent=4)}\n")
     # Proceed with the display of the data
     # Different initial data for each form in a Django formset https://stackoverflow.com/a/23497278/15965186
     LightFormSet = formset_factory(LightForm, extra=0)
