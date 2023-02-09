@@ -19,7 +19,7 @@ def step_licuadora():
 def step_especieros():
     def solve():
         liberar_jugador(5)
-    
+
     if skip:
         solve()
     if especiero1 == "AA BB CC DD":
@@ -34,6 +34,8 @@ teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 def licuadora(message={}, skip=False):
     def solve():
         actions.liberar_grillete(3)
+        from .global_vars import solved_steps
+        solved_steps["licuadora"] = True
     if skip:
         solve()
         return
@@ -44,6 +46,8 @@ def licuadora(message={}, skip=False):
 def soporte_cuchillos(message={}, skip=False):
     def solve():
         actions.prender_luz_uv()
+        from .global_vars import solved_steps
+        solved_steps["soporte_cuchillos"] = True
 
     if skip:
         solve()
@@ -56,6 +60,8 @@ def soporte_especieros(message={}, skip=False):
     def solve():
         # actions.liberar_grillete(4) # Se libera usando candado de forma manual
         actions.abrir_cajon("C1")
+        from .global_vars import solved_steps
+        solved_steps["soporte_especieros"] = True
 
     if skip:
         solve()
@@ -77,6 +83,8 @@ def soporte_especieros(message={}, skip=False):
 def tablero_herramientas(message={}, skip=False):
     def solve():
         actions.liberar_grillete(1)
+        from .global_vars import solved_steps
+        solved_steps["tablero_herramientas"] = True
 
     if skip:
         solve()
@@ -95,11 +103,24 @@ def tablero_herramientas(message={}, skip=False):
 
 
 def cuadro(message={}, skip=False):
+    from .global_vars import solved_steps
+
     def solve():
         actions.abrir_cajon("C3")
         actions.abrir_tablero_electrico()
+        from .actions import desire_to_shadow
+        doc = {
+            "config": {
+                "mode": "fixed",
+                "fixed_brightness": 70
+            }
+        }
+        desire_to_shadow("luz", doc)
+        solved_steps["cuadro"] = True
     if skip:
         solve()
+        return
+    if solved_steps["teclado_heladera"] == False:
         return
     if message["rfid_0"] == "63 2A 91 31":
         print("Cuadro is in the correct position")
@@ -112,6 +133,8 @@ def soporte_pies(message={}, skip=False):
     def solve():
         actions.abrir_heladera()
         actions.apagar_luz_uv()
+        from .global_vars import solved_steps
+        solved_steps["soporte_pies"] = True
 
     if skip:
         solve()
@@ -134,6 +157,8 @@ def soporte_pies(message={}, skip=False):
 def teclado_heladera(tecla_in="", skip=False):
     def solve():
         actions.abrir_cajon("C2")
+        from .global_vars import solved_steps
+        solved_steps["teclado_heladera"] = True
 
     if skip:
         solve()
@@ -150,6 +175,8 @@ def caldera(message={}, skip=False):
     def solve():
         actions.abrir_caldera()
         actions.poner_luces_rojo()
+        from .global_vars import solved_steps
+        solved_steps["caldera"] = True
 
     if skip:
         solve()

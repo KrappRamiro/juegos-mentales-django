@@ -126,12 +126,14 @@ def reset_game(request):
     return redirect(index)
 
 
-def liberar_grillete(request, number):
-    actions.liberar_grillete(number)
+def liberar_grillete(request, grillete):
+    print(f"Desde la web se pidio liberar el grillete {grillete}")
+    actions.liberar_grillete(grillete)
     return redirect(index)
 
 
 def abrir_cajon(request, cajon):
+    print(f"Desde la web se pidio liberar el cajon {cajon}")
     actions.abrir_cajon(cajon)
     return redirect(index)
 
