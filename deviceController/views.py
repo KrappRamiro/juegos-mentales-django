@@ -61,14 +61,18 @@ def update_lights(request):
 
 
 def index(request):
-    return render(request, "deviceController/index.html")
+    from .global_vars import solved_steps
+    context = {
+        "solved_steps": solved_steps
+    }
+    return render(request, "deviceController/index.html", context)
 
 
 def light_control(request):
 
     # Ask the mqtt-broker for information
     mqttc.publish("$aws/things/luz/shadow/get")
-    sleep(0.5)  # Wait until the information is recieved
+    sleep(1)  # Wait until the information is recieved
     from . import global_luz
     print(
         f"***** The global_luz is: ****** \n{json.dumps(global_luz,indent=4)}\n")

@@ -2,8 +2,12 @@
 {% block content %}
    <h1>Control de la sala Hannibal</h1>
    <hr>
-   <h2>Skipeo de pasos</h2>
+   <a href="{% url 'light_control' %}">
+      <h3>Control de luces</h3>
+   </a>
+   <hr>
    <div>
+      <h2>Skipeo de pasos</h2>
       <a href="{% url 'skip_step' "tablero_herramientas" %}"
          class="btn btn-outline-primary">Tablero herramientas</a>
       <br>
@@ -29,6 +33,19 @@
       <br>
    </div>
    <hr>
+   <div>
+      <h2>Pasos resueltos</h2>
+      {% for step, value in solved_steps.items %}
+         {{ step }}:
+         {% if value == True %}
+            RESUELTO
+         {% else %}
+            NO RESUELTO
+         {% endif %}
+         <br>
+      {% endfor %}
+   </div>
+   <hr>
    <h2>Control Grilletes</h2>
    <div>
       <a href="{% url 'liberar_grillete' 1 %}" class="btn btn-outline-primary">Liberar grillete 1</a>
@@ -49,7 +66,9 @@
    <h3>Inicio de sala</h3>
    <a href="{% url 'iniciar_sala' %}" class="btn btn-outline-success">Iniciar sala</a>
    <h3>Control volumen</h3>
-   <h4>Radio</h4>
+   <h4>
+      Radio
+   </h4>
    <a href="{% url 'radio_vol_up' %}" class="btn btn-outline-primary">VOL UP</a>
    <a href="{% url 'radio_vol_down' %}" class="btn btn-outline-primary">VOL DOWN</a>
    <h4>
