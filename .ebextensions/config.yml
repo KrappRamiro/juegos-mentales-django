@@ -1,0 +1,21 @@
+branch-defaults:
+  ebs-deplot:
+    environment: juegos-mentales-django-dev2
+  main:
+    environment: juegos-mentales-django-dev2
+environment-defaults:
+  juegos-mentales-django-dev:
+    branch: null
+    repository: null
+global:
+  application_name: juegos_mentales_django
+  default_ec2_keyname: aws-eb2
+  default_platform: Python 3.8 running on 64bit Amazon Linux 2
+  default_region: us-east-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  sc: git
+  workspace_type: Application
