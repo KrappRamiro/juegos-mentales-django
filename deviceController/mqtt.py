@@ -95,9 +95,9 @@ awshost = "a3df45vgz0yp2s-ats.iot.us-east-1.amazonaws.com"
 awsport = 8883
 clientId = "randomData"
 thingName = "randomData"
-caPath = "certificates/AmazonRootCA1.crt"
-certPath = "certificates/certificate.pem"
-keyPath = "certificates/private.pem"
+caPath = "/var/app/current/certificates/AmazonRootCA1.crt"
+certPath = "/var/app/current/certificates/certificate.pem"
+keyPath = "/var/app/current/certificates/private.pem"
 
 mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath,
               cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
