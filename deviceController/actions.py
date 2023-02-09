@@ -128,6 +128,16 @@ def prender_luz_uv():
     desire_to_shadow("luz", document)
 
 
+def apagar_luz_uv():
+    print("Apagando la luz UV")
+    document = {
+        "uv_light": {
+            "brightness": 0,
+        }
+    }
+    desire_to_shadow("luz", document)
+
+
 def abrir_heladera():
     print("Abriendo la heladera")
     document = {
@@ -145,14 +155,19 @@ def abrir_tablero_electrico():
 
 
 def iniciar_radio():
-    # pregunta, si yo le vuelvo a mandar el mismo track, se reinicia?
-    # capaz haya que cambiar el codigo del arduino nano
-    # para que track 2 sea reiniciar la pista de audio
     print("Reiniciando la radio")
     document = {
         "track_n": 1
     }
     desire_to_shadow("radio", document)
+
+
+def iniciar_sistema_audio():
+    print("Reiniciando el sistema audio")
+    document = {
+        "track_n": 1
+    }
+    desire_to_shadow("sistema_audio", document)
 
 
 def reset_game():
@@ -226,10 +241,6 @@ def reset_game():
     desire_to_shadow("radio", document)
     # endregion
     # region reset sistema_audio
-
-    document = {
-        "track_n": 0
-    }
     desire_to_shadow("sistema_audio", document)
     # endregion
 

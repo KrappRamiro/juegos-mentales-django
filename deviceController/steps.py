@@ -83,7 +83,7 @@ def tablero_herramientas(message={}, skip=False):
         return
     herramientas = {
         "rfid_0": "CA E5 EC 80",
-        "rfid_1": "A3 9C D6 1B",
+        "rfid_1": "59 C7 A4 A3",
         "rfid_2": "00 00 00 00",
         "rfid_3": "5A 1C E5 80"
     }
@@ -111,6 +111,7 @@ def cuadro(message={}, skip=False):
 def soporte_pies(message={}, skip=False):
     def solve():
         actions.abrir_heladera()
+        actions.apagar_luz_uv()
 
     if skip:
         solve()
@@ -160,9 +161,9 @@ def caldera(message={}, skip=False):
         print("Los interruptores estan mal")
         return
     print("Los interruptores estan bien")
-    if message["llaves_paso"] != combinacion_llaves_paso:
-        print("Las llaves paso estan mal")
-        return
+   # if message["llaves_paso"] != combinacion_llaves_paso:
+   #    print("Las llaves paso estan mal")
+   #    return
     print("Las llaves paso estan bien")
     # El nivel de estos esta hardcodeado en el micro
     if message["atenuadores"] != [True, True]:

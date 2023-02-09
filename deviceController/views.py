@@ -141,20 +141,25 @@ def iniciar_sala(request):
         "track_n": 1
     }
     actions.desire_to_shadow("radio", document)
+    actions.desire_to_shadow("sistema_audio", document)
     return redirect(index)
 
 
 def radio_vol_up(request):
     mqttc.publish(topic="radio/vol_up")
+    return redirect(index)
 
 
 def radio_vol_down(request):
     mqttc.publish(topic="radio/vol_down")
+    return redirect(index)
 
 
 def sistema_audio_vol_up(request):
     mqttc.publish(topic="sistema_audio/vol_up")
+    return redirect(index)
 
 
 def sistema_audio_vol_down(request):
     mqttc.publish(topic="sistema_audio/vol_down")
+    return redirect(index)
