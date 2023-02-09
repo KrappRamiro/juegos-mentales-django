@@ -101,7 +101,7 @@ def cuadro(message={}, skip=False):
     if skip:
         solve()
         return
-    if message["rfid_0"] == "90 A3 FB 1B":
+    if message["rfid_0"] == "63 2A 91 31":
         print("Cuadro is in the correct position")
         solve()
     else:
