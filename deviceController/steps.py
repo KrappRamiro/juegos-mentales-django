@@ -68,8 +68,8 @@ def soporte_especieros(message={}, skip=False):
         return
     especieros = {
         "rfid_0": "C9 33 1F 88",
-        "rfid_1": "6A EA 01 81",
-        "rfid_2": "3A 38 DA 80",
+        "rfid_1": "3A 38 DA 80",
+        "rfid_2": "6A EA 01 81",
         "rfid_3": "F9 A9 29 87"
     }
     if message != especieros:
@@ -122,7 +122,7 @@ def cuadro(message={}, skip=False):
         return
     if solved_steps["teclado_heladera"] == False:
         return
-    if message["rfid_0"] == "63 2A 91 31":
+    if message["rfid_0"] == "90 A3 FB 1B":
         print("Cuadro is in the correct position")
         solve()
     else:
