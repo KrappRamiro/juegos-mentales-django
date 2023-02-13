@@ -95,7 +95,8 @@ def tablero_herramientas(message={}, skip=False):
         "rfid_2": "00 00 00 00",
         "rfid_3": "5A 1C E5 80"
     }
-    if message != herramientas:
+    # if message != herramientas:
+    if message["rfid_0"] == herramientas["rfid_0"] and message["rfid_1"] == herramientas["rfid_1"] and message["rfid_3"] == herramientas["rfid_3"]:
         print("Wrong combination for herramientas")
         return
     print("Correct combination for herramientas")

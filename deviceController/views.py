@@ -65,6 +65,7 @@ def index(request):
     context = {
         "solved_steps": solved_steps
     }
+    print(solved_steps)
     return render(request, "deviceController/index.html", context)
 
 
