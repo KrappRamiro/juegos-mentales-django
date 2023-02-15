@@ -36,6 +36,7 @@
    <div>
       <h2>Pasos resueltos</h2>
       {{ solved_steps }}
+      <br>
       {% for step, value in solved_steps.items %}
          {{ step }}:
          {% if value == True %}

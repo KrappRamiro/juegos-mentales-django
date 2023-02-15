@@ -1,3 +1,4 @@
+global solved_steps
 solved_steps = {
     "tablero_herramientas": False,
     "licuadora": False,
