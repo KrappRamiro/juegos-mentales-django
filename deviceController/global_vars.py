@@ -8,3 +8,25 @@ solved_steps = {
     "cuadro": False,
     "caldera": False
 }
+
+'''
+class SolvedSteps:
+    def __init__(self) -> None:
+        self.tablero_herramientas = False
+        self.licuadora = False
+        self.soporte_especieros = False
+        self.soporte_cuchillos = False
+        self.soporte_pies = False
+        self.teclado_heladera = False
+        self.cuadro = False
+        self.caldera = False
+
+
+steps = SolvedSteps()
+print(".............................")
+print(steps.licuadora)
+steps.licuadora = True
+print(steps.licuadora)
+print(".............................")
+
+'''

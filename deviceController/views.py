@@ -9,7 +9,18 @@ from . import actions
 from . import steps
 from .mqtt import mqttc
 import json
+
 logger = logging.getLogger(__name__)
+
+
+def index(request):
+    from .global_vars import solved_steps
+
+    context = {
+        "solved_steps": solved_steps
+    }
+    logger.info(f"\n\n\n{solved_steps}\n\n\n")
+    return render(request, "deviceController/index.html", context)
 
 
 def update_lights(request):
@@ -58,15 +69,6 @@ def update_lights(request):
                   payload=json.dumps(document), qos=1)
     sleep(0.5)
     return redirect(light_control)
-
-
-def index(request):
-    from .global_vars import solved_steps
-    context = {
-        "solved_steps": solved_steps
-    }
-    print(solved_steps)
-    return render(request, "deviceController/index.html", context)
 
 
 def light_control(request):
