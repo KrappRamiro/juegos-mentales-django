@@ -28,14 +28,17 @@ def step_especieros():
 """
 from . import actions
 from collections import deque
+from .global_vars import solved_steps
 teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
 
 def licuadora(message={}, skip=False):
     def solve():
         actions.liberar_grillete(3)
-        from .global_vars import solved_steps
+
+        global solved_steps
         solved_steps["licuadora"] = True
+
     if skip:
         solve()
         return
@@ -46,7 +49,8 @@ def licuadora(message={}, skip=False):
 def soporte_cuchillos(message={}, skip=False):
     def solve():
         actions.prender_luz_uv()
-        from .global_vars import solved_steps
+
+        global solved_steps
         solved_steps["soporte_cuchillos"] = True
 
     if skip:
@@ -60,7 +64,8 @@ def soporte_especieros(message={}, skip=False):
     def solve():
         # actions.liberar_grillete(4) # Se libera usando candado de forma manual
         actions.abrir_cajon("C1")
-        from .global_vars import solved_steps
+
+        global solved_steps
         solved_steps["soporte_especieros"] = True
 
     if skip:
@@ -83,7 +88,8 @@ def soporte_especieros(message={}, skip=False):
 def tablero_herramientas(message={}, skip=False):
     def solve():
         actions.liberar_grillete(1)
-        from .global_vars import solved_steps
+
+        global solved_steps
         solved_steps["tablero_herramientas"] = True
 
     if skip:
@@ -104,7 +110,6 @@ def tablero_herramientas(message={}, skip=False):
 
 
 def cuadro(message={}, skip=False):
-    from .global_vars import solved_steps
 
     def solve():
         actions.abrir_cajon("C3")
@@ -117,7 +122,9 @@ def cuadro(message={}, skip=False):
             }
         }
         desire_to_shadow("luz", doc)
+        global solved_steps
         solved_steps["cuadro"] = True
+
     if skip:
         solve()
         return
@@ -134,7 +141,8 @@ def soporte_pies(message={}, skip=False):
     def solve():
         actions.abrir_heladera()
         actions.apagar_luz_uv()
-        from .global_vars import solved_steps
+
+        global solved_steps
         solved_steps["soporte_pies"] = True
 
     if skip:
@@ -158,7 +166,8 @@ def soporte_pies(message={}, skip=False):
 def teclado_heladera(tecla_in="", skip=False):
     def solve():
         actions.abrir_cajon("C2")
-        from .global_vars import solved_steps
+
+        global solved_steps
         solved_steps["teclado_heladera"] = True
 
     if skip:
@@ -176,7 +185,8 @@ def caldera(message={}, skip=False):
     def solve():
         actions.abrir_caldera()
         actions.poner_luces_rojo()
-        from .global_vars import solved_steps
+
+        global solved_steps
         solved_steps["caldera"] = True
 
     if skip:

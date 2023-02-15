@@ -13,8 +13,10 @@ import json
 logger = logging.getLogger(__name__)
 
 
+from .global_vars import solved_steps
+
+
 def index(request):
-    from .global_vars import solved_steps
 
     context = {
         "solved_steps": solved_steps
