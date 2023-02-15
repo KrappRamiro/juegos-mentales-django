@@ -28,6 +28,7 @@ def step_especieros():
 """
 from . import actions
 from collections import deque
+from .models import Step
 from .global_vars import solved_steps
 teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
@@ -35,9 +36,10 @@ teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 def licuadora(message={}, skip=False):
     def solve():
         actions.liberar_grillete(3)
-
-        global solved_steps
         solved_steps["licuadora"] = True
+        # step = Step.objects.get(step_name="licuadora")
+        # step.solved = True
+        # step.save()
 
     if skip:
         solve()
@@ -194,7 +196,7 @@ def caldera(message={}, skip=False):
         return
 
     print(f"El mensaje de la caldera es {message}")
-    combinacion_llaves_paso = [False, False, False, False]
+    combinacion_llaves_paso = [True, False, False, True]
     if message["interruptores"] == False:
         print("Los interruptores estan mal")
         return
