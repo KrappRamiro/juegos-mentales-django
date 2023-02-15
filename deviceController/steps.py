@@ -28,7 +28,6 @@ def step_especieros():
 """
 from . import actions
 from collections import deque
-from .models import Step
 from .global_vars import solved_steps
 teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
