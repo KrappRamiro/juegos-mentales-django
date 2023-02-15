@@ -17,7 +17,7 @@ from .global_vars import solved_steps
 
 
 def index(request):
-
+    sleep(0.5)
     context = {
         "solved_steps": solved_steps
     }
