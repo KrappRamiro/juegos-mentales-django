@@ -73,10 +73,10 @@ def soporte_especieros(message={}, skip=False):
         solve()
         return
     especieros = {
-        "rfid_0": "C9 33 1F 88",
-        "rfid_1": "3A 38 DA 80",
-        "rfid_2": "6A EA 01 81",
-        "rfid_3": "F9 A9 29 87"
+        "rfid_0": "F9 A9 29 87",
+        "rfid_1": "6A EA 01 81",
+        "rfid_2": "3A 38 DA 80",
+        "rfid_3": "C9 33 1F 88"
     }
     if message != especieros:
         print("Wrong combination for especieros")
