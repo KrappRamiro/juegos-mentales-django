@@ -170,3 +170,21 @@ def sistema_audio_vol_up(request):
 def sistema_audio_vol_down(request):
     mqttc.publish(topic="sistema_audio/vol_down")
     return redirect(index)
+
+
+def populate_db(request):
+    solved_steps = [
+        "tablero_herramientas",
+        "licuadora",
+        "soporte_especieros",
+        "soporte_cuchillos",
+        "soporte_pies",
+        "teclado_heladera",
+        "cuadro",
+        "caldera"
+    ]
+    count = Step.objects.count()
+    if count == 0:
+        for stepname in solved_steps:
+            Step.objects.create(step_name=stepname, solved=False)
+    return redirect(index)

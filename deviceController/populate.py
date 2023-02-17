@@ -1,4 +1,4 @@
-from ..models import Step
+from .models import Step
 solved_steps = [
     "tablero_herramientas",
     "licuadora",
