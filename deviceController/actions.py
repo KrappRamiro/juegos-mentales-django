@@ -173,11 +173,11 @@ def iniciar_sistema_audio():
 def reset_game():
     from . import retornar_flag_luz_prendida, activar_flag_luz_prendida, desactivar_flag_luz_prendida
     from . import actions
-    from .global_vars import solved_steps
-    print(solved_steps)
-    for key in solved_steps:
-        solved_steps[key] = False
-    print(solved_steps)
+    from .models import Step
+    steps = Step.objects.all()
+    for step in steps:
+        step.solved = False
+        step.save()
     """_summary_
     This function should publish an /update to all the shadows, with a
     {

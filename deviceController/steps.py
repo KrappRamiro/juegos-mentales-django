@@ -28,17 +28,17 @@ def step_especieros():
 """
 from . import actions
 from collections import deque
-from .global_vars import solved_steps
 teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
 
 def licuadora(message={}, skip=False):
+    from .models import Step
+
     def solve():
         actions.liberar_grillete(3)
-        solved_steps["licuadora"] = True
-        # step = Step.objects.get(step_name="licuadora")
-        # step.solved = True
-        # step.save()
+        step = Step.objects.get(step_name="licuadora")
+        step.solved = True
+        step.save()
 
     if skip:
         solve()
@@ -48,11 +48,13 @@ def licuadora(message={}, skip=False):
 
 
 def soporte_cuchillos(message={}, skip=False):
+    from .models import Step
+
     def solve():
         actions.prender_luz_uv()
-
-        global solved_steps
-        solved_steps["soporte_cuchillos"] = True
+        step = Step.objects.get(step_name="soporte_cuchillos")
+        step.solved = True
+        step.save()
 
     if skip:
         solve()
@@ -62,12 +64,14 @@ def soporte_cuchillos(message={}, skip=False):
 
 
 def soporte_especieros(message={}, skip=False):
+    from .models import Step
+
     def solve():
         # actions.liberar_grillete(4) # Se libera usando candado de forma manual
         actions.abrir_cajon("C1")
-
-        global solved_steps
-        solved_steps["soporte_especieros"] = True
+        step = Step.objects.get(step_name="soporte_especieros")
+        step.solved = True
+        step.save()
 
     if skip:
         solve()
@@ -87,11 +91,13 @@ def soporte_especieros(message={}, skip=False):
 
 
 def tablero_herramientas(message={}, skip=False):
+    from .models import Step
+
     def solve():
         actions.liberar_grillete(1)
-
-        global solved_steps
-        solved_steps["tablero_herramientas"] = True
+        step = Step.objects.get(step_name="tablero_herramientas")
+        step.solved = True
+        step.save()
 
     if skip:
         solve()
@@ -111,6 +117,7 @@ def tablero_herramientas(message={}, skip=False):
 
 
 def cuadro(message={}, skip=False):
+    from .models import Step
 
     def solve():
         actions.abrir_cajon("C3")
@@ -123,13 +130,15 @@ def cuadro(message={}, skip=False):
             }
         }
         desire_to_shadow("luz", doc)
-        global solved_steps
-        solved_steps["cuadro"] = True
+        step = Step.objects.get(step_name="cuadro")
+        step.solved = True
+        step.save()
 
     if skip:
         solve()
         return
-    if solved_steps["teclado_heladera"] == False:
+    step = Step.objects.get(step_name="teclado_heladera")
+    if step.solved == False:
         return
     if message["rfid_0"] == "90 A3 FB 1B":
         print("Cuadro is in the correct position")
@@ -139,12 +148,15 @@ def cuadro(message={}, skip=False):
 
 
 def soporte_pies(message={}, skip=False):
+    from .models import Step
+
     def solve():
         actions.abrir_heladera()
         actions.apagar_luz_uv()
 
-        global solved_steps
-        solved_steps["soporte_pies"] = True
+        step = Step.objects.get(step_name="soporte_pies")
+        step.solved = True
+        step.save()
 
     if skip:
         solve()
@@ -165,11 +177,14 @@ def soporte_pies(message={}, skip=False):
 
 
 def teclado_heladera(tecla_in="", skip=False):
+    from .models import Step
+
     def solve():
         actions.abrir_cajon("C2")
 
-        global solved_steps
-        solved_steps["teclado_heladera"] = True
+        step = Step.objects.get(step_name="teclado_heladera")
+        step.solved = True
+        step.save()
 
     if skip:
         solve()
@@ -183,12 +198,15 @@ def teclado_heladera(tecla_in="", skip=False):
 
 
 def caldera(message={}, skip=False):
+    from .models import Step
+
     def solve():
         actions.abrir_caldera()
         actions.poner_luces_rojo()
 
-        global solved_steps
-        solved_steps["caldera"] = True
+        step = Step.objects.get(step_name="caldera")
+        step.solved = True
+        step.save()
 
     if skip:
         solve()
