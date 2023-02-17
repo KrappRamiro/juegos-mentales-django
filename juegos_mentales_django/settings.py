@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['jm-lecter.us-east-1.elasticbeanstalk.com',
                  'jm-hannibal-env.eba-ajqttk7x.us-east-1.elasticbeanstalk.com',
-                 '127.0.0.1', '172.31.15.251', 'test-jm-hannibal.us-east-1.elasticbeanstalk.com']
+                 '127.0.0.1', '172.31.15.251', 'test-jm-hannibal.us-east-1.elasticbeanstalk.com', '172.31.21.18']
 
 
 # Application definition
