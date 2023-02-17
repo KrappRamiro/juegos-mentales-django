@@ -91,7 +91,7 @@ mqttc.on_connect = on_connect
 mqttc.on_message = on_message
 # mqttc.on_log = on_log
 
-awshost = "a3df45vgz0yp2s-ats.iot.us-east-1.amazonaws.com"
+awshost = "a3df45vgz0yp2s-ats.iot.us-east-1.amazonaws.com-wrong"
 awsport = 8883
 clientId = "randomData"
 thingName = "randomData"
