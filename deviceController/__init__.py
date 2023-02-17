@@ -1,5 +1,4 @@
 from .mqtt import mqttc
-from pymongo import MongoClient
 
 # https://stackoverflow.com/questions/41015779/how-to-use-paho-mqtt-client-in-django
 
