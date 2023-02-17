@@ -84,29 +84,16 @@ WSGI_APPLICATION = 'juegos_mentales_django.wsgi.application'
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
 # }
-if 'RDS_DB_NAME' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            # 'HOST': os.environ['RDS_HOSTNAME'],
-            'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-urixcunu3sop.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
-            'PORT': os.environ['RDS_PORT'],
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'krapp',
+        'PASSWORD': 'jm_canning',
+        'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-urixcunu3sop.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'krapp',
-            'PASSWORD': 'jm_canning',
-            'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-urixcunu3sop.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
-            'PORT': '5432',
-        }
-    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
