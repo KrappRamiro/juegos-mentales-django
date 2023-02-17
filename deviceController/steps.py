@@ -121,15 +121,6 @@ def cuadro(message={}, skip=False):
 
     def solve():
         actions.abrir_cajon("C3")
-        actions.abrir_tablero_electrico()
-        from .actions import desire_to_shadow
-        doc = {
-            "config": {
-                "mode": "fixed",
-                "fixed_brightness": 70
-            }
-        }
-        desire_to_shadow("luz", doc)
         step = Step.objects.get(step_name="cuadro")
         step.solved = True
         step.save()
@@ -213,15 +204,15 @@ def caldera(message={}, skip=False):
         return
 
     print(f"El mensaje de la caldera es {message}")
-    combinacion_llaves_paso = [True, False, False, True]
+
+    if message["llaves_paso"][1] == True and message["llaves_paso"][3] == True:
+        actions.abrir_tablero_electrico()
+        actions.poner_luces_rojo()
+
     if message["interruptores"] == False:
         print("Los interruptores estan mal")
         return
     print("Los interruptores estan bien")
-   # if message["llaves_paso"] != combinacion_llaves_paso:
-   #    print("Las llaves paso estan mal")
-   #    return
-    print("Las llaves paso estan bien")
     # El nivel de estos esta hardcodeado en el micro
     if message["atenuadores"] != [True, True]:
         print("Los atenuadores estan mal")
