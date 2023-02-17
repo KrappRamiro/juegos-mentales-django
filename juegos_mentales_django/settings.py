@@ -84,10 +84,6 @@ WSGI_APPLICATION = 'juegos_mentales_django.wsgi.application'
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
 # }
-host = ''
-if 'RDS_DB_NAME' in os.environ:
-    host = os.environ['RDS_HOSTNAME']
-
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {
@@ -103,10 +99,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'iotd',
-            'USER': 'iotd',
-            'PASSWORD': 'iotd',
-            'HOST': 'localhost',
+            'NAME': 'postgres',
+            'USER': 'krapp',
+            'PASSWORD': 'jm_canning',
+            'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-urixcunu3sop.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
             'PORT': '5432',
         }
     }
