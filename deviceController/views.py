@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def index(request):
-    solved_steps_from_db = Step.objects.all()
+    solved_steps_from_db = Step.objects.all().order_by("id")
     context = {
         "solved_steps": solved_steps_from_db
     }
