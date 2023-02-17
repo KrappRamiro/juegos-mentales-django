@@ -85,28 +85,16 @@ WSGI_APPLICATION = 'juegos_mentales_django.wsgi.application'
 #    }
 # }
 
-if 'RDS_DB_NAME' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'krapp',
+        'PASSWORD': 'jm_canning',
+        'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-gnkasl1mukpq.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'krapp',
-            'PASSWORD': 'jm_canning',
-            'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-gnkasl1mukpq.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
-            'PORT': '5432',
-        }
-    }
+}
 
 
 # Password validation
