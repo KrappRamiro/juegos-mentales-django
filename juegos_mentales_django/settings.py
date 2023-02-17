@@ -100,10 +100,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'iotd',
-            'USER': 'iotd',
-            'PASSWORD': 'iotd',
-            'HOST': 'localhost',
+            'NAME': 'postgres',
+            'USER': 'krapp',
+            'PASSWORD': 'jm_canning',
+            'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-gnkasl1mukpq.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
             'PORT': '5432',
         }
     }
