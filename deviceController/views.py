@@ -8,6 +8,7 @@ from . import actions
 from . import steps
 from .mqtt import mqttc
 import json
+from .models import Step
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +17,9 @@ from .global_vars import solved_steps
 
 
 def index(request):
+    solved_steps_from_db = Step.objects.all()
     context = {
-        "solved_steps": solved_steps
+        "solved_steps": solved_steps_from_db
     }
     logger.info(f"\n\n\n{solved_steps}\n\n\n")
     return render(request, "deviceController/index.html", context)
