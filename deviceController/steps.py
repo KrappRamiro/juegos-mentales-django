@@ -205,6 +205,10 @@ def caldera(message={}, skip=False):
 
     print(f"El mensaje de la caldera es {message}")
 
+    cuadro_status = Step.objects.get(step_name="cuadro")
+    if cuadro_status.solved == False:
+        print("Cant solve caldera if cuadro is not resolved")
+        return
     if message["llaves_paso"][1] == True and message["llaves_paso"][3] == True:
         actions.abrir_tablero_electrico()
         actions.poner_luces_rojo()
