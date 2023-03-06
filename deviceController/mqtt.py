@@ -23,11 +23,28 @@ def on_connect(client, userdata, flags, rc):
     global connflag
     connflag = True
 
-    # ----------- Licuadora --------------- #
+    # ------------------- Debug -------------------- #
     client.subscribe("+/debug/#", 1)
     client.message_callback_add(
         "+/debug/#",
         callbacks.debug)
+    # ------------------- rfid devices -------------------- #
+    client.subscribe("+/readings/rfid")
+    client.message_callback_add("+/readings/rfid", callbacks.rfid)
+    # ------------------- switch devices -------------------- #
+    client.subscribe("+/readings/switch")
+    client.message_callback_add("+/readings/switch", callbacks.switch)
+    # ----------------- heladera -------------------------- #
+    client.subscribe("heladera/readings/keypad")
+    client.message_callback_add("heladera/readings/keypad", callbacks.heladera)
+    # ----------------- caldera -------------------------- #
+    client.subscribe("caldera/readings/tablero_electrico")
+    client.message_callback_add(
+        "caldera/readings/tablero_electrico", callbacks.caldera)
+    # ----------------- llaves_paso ----------------------- #
+    client.subscribe("caldera/readings/llaves_paso")
+    client.message_callback_add(
+        "caldera/readings/llaves_paso", callbacks.llaves_paso)
 
 
 mqttc = paho.Client()

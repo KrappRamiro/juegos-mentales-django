@@ -30,152 +30,168 @@ from . import actions
 from collections import deque
 teclas = deque(6 * ['0'], 6)  # six 6, maxlen = 6
 
+# region helper functions
 
-def licuadora(message={}, skip=False):
+
+def check_rfid(input, expected):
+    print(f"comparing \n{input} against \n{expected}")
+    try:
+        if input == expected:
+            print("Correct RFID combination")
+            return True
+        else:
+            print("Wrong RFID combination")
+            return False
+    except Exception as e:
+        print(e)
+
+
+def check_switch(input):
+    print("checking switch")
+    try:
+        return input["switch"]
+    except Exception as e:
+        print(e)
+
+
+def solve_step(name):
     from .models import Step
-
-    def solve():
-        actions.liberar_grillete(3)
-        step = Step.objects.get(step_name="licuadora")
+    print(f"Solving step {name}")
+    try:
+        step = Step.objects.get(step_name=name)
         step.solved = True
         step.save()
+    except Exception as e:
+        print(e)
+
+
+def check_step_solved(name):
+    from .models import Step
+    try:
+        step = Step.objects.get(step_name=name)
+    except Exception as e:
+        print(e)
+    if step.solved:
+        print(f"Step {name} is solved")
+        return True
+    else:
+        print(f"Step {name} is not solved")
+        return False
+# endregion
+
+
+def luz(message={}, skip=False):
+    def solve():
+        actions.prender_luz()
+        solve_step("luz")
+    if skip:
+        solve()
+        return
+    if check_switch(message):
+        solve()
+
+
+def licuadora(message={}, skip=False):
+    def solve():
+        actions.liberar_grillete(3)
+        solve_step("licuadora")
 
     if skip:
         solve()
         return
-    if message["estado_boton"] == True:
+    if check_switch(message):
         solve()
 
 
 def soporte_cuchillos(message={}, skip=False):
-    from .models import Step
-
     def solve():
         actions.prender_luz_uv()
-        step = Step.objects.get(step_name="soporte_cuchillos")
-        step.solved = True
-        step.save()
+        solve_step("soporte_cuchillos")
 
     if skip:
         solve()
         return
-    if message["estado_switch"] is True:
+    if check_switch(message):
         solve()
 
 
-def soporte_especieros(message={}, skip=False):
-    from .models import Step
-
+def especiero(message={}, skip=False):
     def solve():
         # actions.liberar_grillete(4) # Se libera usando candado de forma manual
         actions.abrir_cajon("C1")
-        step = Step.objects.get(step_name="soporte_especieros")
-        step.solved = True
-        step.save()
+        solve_step("especiero")
 
     if skip:
         solve()
         return
-    especieros = {
+    combination = {
         "rfid_0": "F9 A9 29 87",
         "rfid_1": "6A EA 01 81",
         "rfid_2": "3A 38 DA 80",
         "rfid_3": "C9 33 1F 88"
     }
-    if message != especieros:
-        print("Wrong combination for especieros")
-        return
-    print("Correct combination for especieros")
-    solve()
-    # Este va al electroiman de la alacena que tiene la llave tuerca para el jugador 4
+    if check_rfid(message, combination):
+        solve()
 
 
 def tablero_herramientas(message={}, skip=False):
-    from .models import Step
-
     def solve():
         actions.liberar_grillete(1)
-        step = Step.objects.get(step_name="tablero_herramientas")
-        step.solved = True
-        step.save()
+        solve_step("tablero_herramientas")
 
     if skip:
         solve()
         return
-    herramientas = {
+    combination = {
         "rfid_0": "CA E5 EC 80",
         "rfid_1": "59 C7 A4 A3",
         "rfid_2": "00 00 00 00",
         "rfid_3": "5A 1C E5 80"
     }
-    # if message != herramientas:
-    if message["rfid_0"] != herramientas["rfid_0"] or message["rfid_1"] != herramientas["rfid_1"] or message["rfid_3"] != herramientas["rfid_3"]:
-        print("Wrong combination for herramientas")
-        return
-    print("Correct combination for herramientas")
-    solve()
+    if check_rfid(message, combination):
+        solve()
 
 
 def cuadro(message={}, skip=False):
-    from .models import Step
-
     def solve():
         actions.abrir_cajon("C3")
-        step = Step.objects.get(step_name="cuadro")
-        step.solved = True
-        step.save()
+        solve_step("cuadro")
 
     if skip:
         solve()
         return
-    step = Step.objects.get(step_name="teclado_heladera")
-    if step.solved == False:
+    if check_step_solved("teclado_heladera") == False:
         return
-    if message["rfid_0"] == "90 A3 FB 1B":
-        print("Cuadro is in the correct position")
+    combination = {
+        "rfid_0" == "90 A3 FB 1B"
+    }
+    if check_rfid(message, combination):
         solve()
-    else:
-        print("Cuadro is NOT in the correct position")
 
 
 def soporte_pies(message={}, skip=False):
-    from .models import Step
-
     def solve():
         actions.abrir_heladera()
         actions.apagar_luz_uv()
-
-        step = Step.objects.get(step_name="soporte_pies")
-        step.solved = True
-        step.save()
+        solve_step("soporte_pies")
 
     if skip:
         solve()
         return
-    pies = {
+    combination = {
         "rfid_0": "AA 2F FD 80",
         "rfid_1": "49 88 29 87",
         "rfid_2": "79 10 22 A4",
         "rfid_3": "F9 67 13 87"
     }
-    print(f"message = {message}")
-    print(f"pies = {pies}")
-    if message != pies:
-        print("Wrong combination for pies")
-        return
-    print("Correct combination for pies")
-    solve()
+    if check_rfid(message, combination):
+        solve()
 
 
 def teclado_heladera(tecla_in="", skip=False):
-    from .models import Step
-
     def solve():
         actions.abrir_cajon("C2")
-
-        step = Step.objects.get(step_name="teclado_heladera")
-        step.solved = True
-        step.save()
+        solve_step("teclado_heladera")
 
     if skip:
         solve()
@@ -188,42 +204,51 @@ def teclado_heladera(tecla_in="", skip=False):
         solve()
 
 
-def caldera(message={}, skip=False):
-    from .models import Step
+def llaves_paso(message={}, skip=False):
+    def solve():
+        actions.abrir_tablero_electrico()
+        actions.poner_luces_rojo()
+        solve_step("llaves_paso")
+    if skip:
+        solve()
+        return
+    if check_step_solved("cuadro") == False:
+        return
+    if message["llaves_paso"][1] == True and message["llaves_paso"][3] == True:
+        solve()
 
+
+def caldera(message={}, skip=False):
     def solve():
         actions.abrir_caldera()
         actions.poner_luces_rojo()
-
-        step = Step.objects.get(step_name="caldera")
-        step.solved = True
-        step.save()
+        solve_step("caldera")
 
     if skip:
         solve()
         return
 
-    print(f"El mensaje de la caldera es {message}")
-
-    cuadro_status = Step.objects.get(step_name="cuadro")
-    if cuadro_status.solved == False:
-        print("Cant solve caldera if cuadro is not resolved")
+    if check_step_solved("llaves_paso") == False:
         return
-    if message["llaves_paso"][1] == True and message["llaves_paso"][3] == True:
-        actions.abrir_tablero_electrico()
-        actions.poner_luces_rojo()
+    should_solve = True
 
     if message["interruptores"] == False:
-        print("Los interruptores estan mal")
-        return
-    print("Los interruptores estan bien")
-    # El nivel de estos esta hardcodeado en el micro
+        print("interruptores: WRONG")
+        should_solve = False
+    else:
+        print("interruptores: CORRECT")
+
     if message["atenuadores"] != [True, True]:
-        print("Los atenuadores estan mal")
-        return
-    print("Los atenuadores estan bien")
-    if message["botones"] == False:  # Estan hardcodeados en el cableado
-        print("Los botones estan mal")
-        return
-    print("Los botones estan bien")
-    solve()
+        print("atenuadores: WRONG")
+        should_solve = False
+    else:
+        print("atenuadores: CORRECT")
+
+    if message["botones"] == False:
+        print("botones: WRONG")
+        should_solve = False
+    else:
+        print("botones: CORRECT")
+
+    if should_solve:
+        solve()

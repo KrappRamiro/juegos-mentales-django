@@ -20,8 +20,46 @@ def debug(client, userdata, msg):
     print(f"{thingname} [{subtopic}] says: {message}")
 
 
+def rfid(client, userdata, msg):
+    print("Handling generic RFID callback")
+    message = json.loads(msg.payload.decode('utf-8'))
+    thingname = msg.topic.split('/')[0]
+    if thingname == "especiero":
+        steps.especiero(message)
+    if thingname == "tablero_herramientas":
+        steps.tablero_herramientas(message)
+    if thingname == "soporte_pies":
+        steps.soporte_pies(message)
+    if thingname == "cuadro":
+        steps.cuadro(message)
+
+
+def switch(client, userdata, msg):
+    print("Handling generic switch callback")
+    message = json.loads(msg.payload.decode('utf-8'))
+    thingname = msg.topic.split('/')[0]
+    if thingname == "licuadora":
+        steps.licuadora(message)
+    if thingname == "soporte_cuchillos":
+        steps.soporte_cuchillos(message)
+    if thingname == "luz":
+        steps.luz(message)
+
+
 def heladera(client, userdata, msg):
     print("Handling heladera callback")
     message = json.loads(msg.payload.decode('utf-8'))
     tecla = message["key"]  # Get the inputted tecla
     steps.teclado_heladera(tecla)
+
+
+def caldera(client, userdata, msg):
+    print("Handling caldera callback")
+    message = json.loads(msg.payload.decode('utf-8'))
+    steps.caldera(message)
+
+
+def llaves_paso(client, userdata, msg):
+    print("Handling llaves_paso callback")
+    message = json.loads(msg.payload.decode('utf-8'))
+    steps.llaves_paso(message)

@@ -78,22 +78,22 @@ WSGI_APPLICATION = 'juegos_mentales_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'krapp',
-        'PASSWORD': 'jm_canning',
-        'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-urixcunu3sop.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'postgres',
+#        'USER': 'krapp',
+#        'PASSWORD': 'jm_canning',
+#        'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-urixcunu3sop.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
+#        'PORT': '5432',
+#    }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 

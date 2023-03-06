@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 def index(request):
-    solved_steps_from_db = Step.objects.all().order_by("id")
+    steps = Step.objects.all().order_by("id")
     context = {
-        "solved_steps": solved_steps_from_db
+        "steps": steps
     }
     return render(request, "deviceController/index.html", context)
 
@@ -105,10 +105,12 @@ def skip_step(request, step_name):
     print("Se ha pedido skipear {}".format(step_name.replace("_", " ")))
     if step_name == "tablero_herramientas":
         steps.tablero_herramientas(skip=True)
-    elif step_name == "boton_licuadora":
+    elif step_name == "luz":
+        steps.luz(skip=True)
+    elif step_name == "licuadora":
         steps.licuadora(skip=True)
-    elif step_name == "soporte_especieros":
-        steps.soporte_especieros(skip=True)
+    elif step_name == "especiero":
+        steps.especiero(skip=True)
     elif step_name == "soporte_cuchillos":
         steps.soporte_cuchillos(skip=True)
     elif step_name == "soporte_pies":
@@ -117,6 +119,8 @@ def skip_step(request, step_name):
         steps.teclado_heladera(skip=True)
     elif step_name == "cuadro":
         steps.cuadro(skip=True)
+    elif step_name == "llaves_paso":
+        steps.llaves_paso(skip=True)
     elif step_name == "caldera":
         steps.caldera(skip=True)
     else:
@@ -144,47 +148,26 @@ def abrir_cajon(request, cajon):
 
 
 def iniciar_sala(request):
-    document = {
-        "track_n": 1
-    }
-    actions.desire_to_shadow("radio", document)
-    actions.desire_to_shadow("sistema_audio", document)
+    actions.iniciar_radio()
+    actions.iniciar_sistema_audio()
     return redirect(index)
 
 
 def radio_vol_up(request):
-    mqttc.publish(topic="radio/vol_up")
+    mqttc.publish(topic="radio/actions/vol_up")
     return redirect(index)
 
 
 def radio_vol_down(request):
-    mqttc.publish(topic="radio/vol_down")
+    mqttc.publish(topic="radio/actions/vol_down")
     return redirect(index)
 
 
 def sistema_audio_vol_up(request):
-    mqttc.publish(topic="sistema_audio/vol_up")
+    mqttc.publish(topic="sistema_audio/actions/vol_up")
     return redirect(index)
 
 
 def sistema_audio_vol_down(request):
-    mqttc.publish(topic="sistema_audio/vol_down")
-    return redirect(index)
-
-
-def populate_db(request):
-    solved_steps = [
-        "tablero_herramientas",
-        "licuadora",
-        "soporte_especieros",
-        "soporte_cuchillos",
-        "soporte_pies",
-        "teclado_heladera",
-        "cuadro",
-        "caldera"
-    ]
-    count = Step.objects.count()
-    if count == 0:
-        for stepname in solved_steps:
-            Step.objects.create(step_name=stepname, solved=False)
+    mqttc.publish(topic="sistema_audio/actions/vol_down")
     return redirect(index)

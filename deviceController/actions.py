@@ -20,24 +20,16 @@ import json
 from .mqtt import mqttc
 
 
-def desire_to_shadow(thingname, dictionary):
-    print(
-        f"Reporting to the shadow of {thingname} the following dictionary: {dictionary}")
-    doc = {
-        "state": {
-            "desired": dictionary
-        }
-    }
-    mqttc.publish(topic=f"$aws/things/{thingname}/shadow/update",
-                  payload=json.dumps(doc), qos=1)
+def publish_to_elements(thingname, subtopic, dictionary={}):
+    topic = thingname + '/elements/' + subtopic
+    print(f"Reporting to {topic} the following dictionary: {dictionary}")
+    mqttc.publish(topic=topic, payload=json.dumps(dictionary), qos=1)
 
 
 def liberar_grillete(n_grillete):
     print(f"Liberando grillete #{n_grillete}")
-    document = {
-        f"grillete_{n_grillete}": True
-    }
-    desire_to_shadow("grilletes", document)
+    publish_to_elements(
+        "grilletes", f"electroiman_{n_grillete}", {"status": True})
 
 
 def abrir_cajon(cajon):
@@ -47,7 +39,7 @@ def abrir_cajon(cajon):
 
         Contiene una llave tuerca 10 de los grilletes del jugador No. 4, un cuchillo y un pie cortado 3.
 
-    # C2: 
+    # C2:
         Este cajon se deberia abrir cuando se resuelve el teclado numerico de la heladera
 
         Contiene parte de las instrucciones para configurar el panel eléctrico
@@ -62,20 +54,9 @@ def abrir_cajon(cajon):
         no permita que los interruptores de palanca (térmicas) estén en esta posición
     """
     print(f"Abriendo cajon {cajon}")
-    if cajon == "C1":
-        document = {
-            "electroiman_1": True
-        }
-    if cajon == "C2":
-        document = {
-            "electroiman_2": True
-        }
-
-    if cajon == "C3":
-        document = {
-            "electroiman_3": True
-        }
-    desire_to_shadow("cajones_bajomesada", document)
+    electroiman_n = cajon[1]
+    publish_to_elements(
+        "cajones_bajomesada", f"electroiman_{electroiman_n}", {"status": True})
 
 
 def poner_luces_rojo():
@@ -85,7 +66,7 @@ def poner_luces_rojo():
             "mode": "panic"
         }
     }
-    desire_to_shadow("luz", document)
+    publish_to_elements("luz", "lights", document)
 
 
 def abrir_caldera():
@@ -93,7 +74,7 @@ def abrir_caldera():
     document = {
         "electroiman_caldera": True
     }
-    desire_to_shadow("caldera", document)
+    publish_to_elements("caldera", "electroiman_caldera", document)
     poner_luces_rojo()
 
 
@@ -105,7 +86,7 @@ def prender_luz():
             "mode": "scary"
         }
     }
-    desire_to_shadow("luz", document)
+    publish_to_elements("luz", "lights", document)
 
 
 def apagar_luz():
@@ -115,7 +96,7 @@ def apagar_luz():
             "mode": "off"
         }
     }
-    desire_to_shadow("luz", document)
+    publish_to_elements("luz", "lights", document)
 
 
 def prender_luz_uv():
@@ -125,7 +106,7 @@ def prender_luz_uv():
             "brightness": 250,
         }
     }
-    desire_to_shadow("luz", document)
+    publish_to_elements("luz", "lights", document)
 
 
 def apagar_luz_uv():
@@ -135,23 +116,23 @@ def apagar_luz_uv():
             "brightness": 0,
         }
     }
-    desire_to_shadow("luz", document)
+    publish_to_elements("luz", "lights", document)
 
 
 def abrir_heladera():
     print("Abriendo la heladera")
     document = {
-        "electroiman": True
+        "status": True
     }
-    desire_to_shadow("heladera", document)
+    publish_to_elements("heladera", "electroiman", document)
 
 
 def abrir_tablero_electrico():
     print("Abriendo el tablero electrico")
     document = {
-        "electroiman_tablero": True
+        "status": True
     }
-    desire_to_shadow("caldera", document)
+    publish_to_elements("caldera", "electroiman_tablero", document)
 
 
 def iniciar_radio():
@@ -159,7 +140,7 @@ def iniciar_radio():
     document = {
         "track_n": 1
     }
-    desire_to_shadow("radio", document)
+    publish_to_elements("radio", "track_n", document)
 
 
 def iniciar_sistema_audio():
@@ -167,51 +148,35 @@ def iniciar_sistema_audio():
     document = {
         "track_n": 1
     }
-    desire_to_shadow("sistema_audio", document)
+    publish_to_elements("sistema_audio", "track_n", document)
 
 
 def reset_game():
-    from . import retornar_flag_luz_prendida, activar_flag_luz_prendida, desactivar_flag_luz_prendida
     from . import actions
     from .models import Step
-    steps = Step.objects.all()
-    for step in steps:
-        step.solved = False
-        step.save()
-    """_summary_
-    This function should publish an /update to all the shadows, with a
-    {
-        "state": {
-            "desired": {
-                ... : ...,
-                ... : ...
-            }
-        }
-    document, which contains the initial value of the sala
-    """
-    desactivar_flag_luz_prendida()
+    try:
+        steps = Step.objects.all()
+        for step in steps:
+            step.solved = False
+            step.save()
+    except Exception as e:
+        print(e)
     actions.apagar_luz()
-    # region reset caldera
+    # region reset electroimanes
     document = {
-        "electroiman_caldera": False,
-        "electroiman_tablero": False
+        "status": False
     }
-    desire_to_shadow("caldera", document)
-    # endregion reset caldera
-
-    # region reset grilletes
-    document = {
-        "grillete_1": False,
-        "grillete_2": False,
-        "grillete_3": False,
-        "grillete_4": False
-    }
-
-    desire_to_shadow("grilletes", document)
-    # endregion reset grilletes
+    publish_to_elements("caldera", "electroiman_tablero", document)
+    publish_to_elements("caldera", "electroiman_caldera", document)
+    for e in range(4):
+        publish_to_elements("grilletes", f"electroiman_{e+1}", document)
+    for e in range(3):
+        publish_to_elements("cajones_bajomesada",
+                            f"electroiman_{e+1}", document)
+    publish_to_elements("heladera", "electroiman", document)
+    # endregion
 
     # region reset luz
-    # Lo pongo con el brillo al máximo asi la encargada puede acomodar el lugar y despues apagar la luz a mano
     document = {
         "config": {
             "mode": "off",
@@ -220,37 +185,19 @@ def reset_game():
             "brightness": 0
         }
     }
-    desire_to_shadow("luz", document)
+    publish_to_elements("luz", "lights", document)
     # endregion reset luz
 
-    # region reset heladera
-    document = {
-        "electroiman": False
-    }
-    desire_to_shadow("heladera", document)
-    # endregion reset heladera
-
-    # region reset cajones_bajomesada
-    document = {
-        "electroiman_1": False,
-        "electroiman_2": False,
-        "electroiman_3": False
-    }
-    desire_to_shadow("cajones_bajomesada", document)
-    # endregion
-
-    # region reset radio
+    # region reset audio
     document = {
         "track_n": 0
     }
-    desire_to_shadow("radio", document)
-    # endregion
-    # region reset sistema_audio
-    desire_to_shadow("sistema_audio", document)
+    publish_to_elements("radio", "track_n", document)
+    publish_to_elements("sistema_audio", "track_n", document)
     # endregion
 
     # Reset the RFID memory
-    mqttc.publish(topic="especiero/reset")
-    mqttc.publish(topic="cuadro/reset")
-    mqttc.publish(topic="soporte_pies/reset")
-    mqttc.publish(topic="tablero_herramientas/reset")
+    mqttc.publish(topic="especiero/actions/clear_rfid")
+    mqttc.publish(topic="cuadro/actions/clear_rfid")
+    mqttc.publish(topic="soporte_pies/actions/clear_rfid")
+    mqttc.publish(topic="tablero_herramientas/actions/clear_rfid")

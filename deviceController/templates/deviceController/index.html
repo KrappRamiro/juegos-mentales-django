@@ -8,34 +8,16 @@
    <hr>
    <div>
       <h2>Skipeo de pasos</h2>
-      <a href="{% url 'skip_step' "tablero_herramientas" %}"
-         class="btn btn-outline-primary">Tablero herramientas</a>
-      <br>
-      <a href="{% url 'skip_step' "boton_licuadora" %}"
-         class="btn btn-outline-primary">Boton licuadora</a>
-      <br>
-      <a href="{% url 'skip_step' "soporte_especieros" %}"
-         class="btn btn-outline-primary">Soporte especieros</a>
-      <br>
-      <a href="{% url 'skip_step' "soporte_cuchillos" %}"
-         class="btn btn-outline-primary">Soporte cuchillos</a>
-      <br>
-      <a href="{% url 'skip_step' "soporte_pies" %}"
-         class="btn btn-outline-primary">Soporte pies (abre heladera)</a>
-      <br>
-      <a href="{% url 'skip_step' "teclado_heladera" %}"
-         class="btn btn-outline-primary">Teclado de la heladera</a>
-      <br>
-      <a href="{% url 'skip_step' "cuadro" %}" class="btn btn-outline-primary">Cuadro dado vuelta</a>
-      <br>
-      <a href="{% url 'skip_step' "caldera" %}"
-         class="btn btn-outline-primary">Resolucion de caldera [FIN DE JUEGO]</a>
-      <br>
+      {% for step in steps %}
+         <a href="{% url 'skip_step' step.step_name %}"
+            class="btn btn-outline-primary">{{ step.step_name }}</a>
+         <br>
+      {% endfor %}
    </div>
    <hr>
    <div>
       <h2>Pasos resueltos</h2>
-      {% for step in solved_steps %}
+      {% for step in steps %}
          <b>{{ step.step_name }}:</b>
          {% if step.solved %}
             <span style="color:green">RESUELTO</span>
@@ -66,17 +48,11 @@
    <a href="{% url 'reset_game' %}" class="btn btn-outline-danger">Reiniciar sala</a>
    <h3>Inicio de sala</h3>
    <a href="{% url 'iniciar_sala' %}" class="btn btn-outline-success">Iniciar sala</a>
-   <h3>
-      Control volumen
-   </h3>
-   <h4>
-      Radio
-   </h4>
+   <h3>Control volumen</h3>
+   <h4>Radio</h4>
    <a href="{% url 'radio_vol_up' %}" class="btn btn-outline-primary">VOL UP</a>
    <a href="{% url 'radio_vol_down' %}" class="btn btn-outline-primary">VOL DOWN</a>
-   <h4>
-      Sistema de audio
-   </h4>
+   <h4>Sistema de audio</h4>
    <a href="{% url 'sistema_audio_vol_up' %}"
       class="btn btn-outline-primary">VOL UP</a>
    <a href="{% url 'sistema_audio_vol_down' %}"
