@@ -6,27 +6,28 @@
       <h3>Control de luces</h3>
    </a>
    <hr>
-   <div>
-      <h2>Skipeo de pasos</h2>
-      {% for step in steps %}
-         <a href="{% url 'skip_step' step.step_name %}"
-            class="btn btn-outline-primary">{{ step.step_name }}</a>
+   <div class="row align-items-start">
+      <div class="col">
+         <h2>Skipeo de pasos</h2>
+         {% for step in steps %}
+            <a href="{% url 'skip_step' step.step_name %}"
+               class="btn btn-outline-primary">{{ step.step_name }}</a>
+            <br>
+         {% endfor %}
+      </div>
+      <div class="col">
+         <h2>Pasos resueltos</h2>
+         {% for step in steps %}
+            <b>{{ step.step_name }}:</b>
+            {% if step.solved %}
+               <span style="color:green">RESUELTO</span>
+            {% else %}
+               <span style="color:red">SIN RESOLVER</span>
+            {% endif %}
+            <br>
+         {% endfor %}
          <br>
-      {% endfor %}
-   </div>
-   <hr>
-   <div>
-      <h2>Pasos resueltos</h2>
-      {% for step in steps %}
-         <b>{{ step.step_name }}:</b>
-         {% if step.solved %}
-            <span style="color:green">RESUELTO</span>
-         {% else %}
-            <span style="color:red">SIN RESOLVER</span>
-         {% endif %}
-         <br>
-      {% endfor %}
-      <br>
+      </div>
    </div>
    <hr>
    <h2>Control Grilletes</h2>

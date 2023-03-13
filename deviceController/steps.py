@@ -43,7 +43,7 @@ def check_rfid(input, expected):
             print("Wrong RFID combination")
             return False
     except Exception as e:
-        print(e)
+        print(f"EXCEPTION!!!:\t{e}")
 
 
 def check_switch(input):
@@ -51,7 +51,7 @@ def check_switch(input):
     try:
         return input["switch"]
     except Exception as e:
-        print(e)
+        print(f"EXCEPTION!!!:\t{e}")
 
 
 def solve_step(name):
@@ -62,7 +62,7 @@ def solve_step(name):
         step.solved = True
         step.save()
     except Exception as e:
-        print(e)
+        print(f"EXCEPTION!!!:\t{e}")
 
 
 def check_step_solved(name):
@@ -70,7 +70,7 @@ def check_step_solved(name):
     try:
         step = Step.objects.get(step_name=name)
     except Exception as e:
-        print(e)
+        print(f"EXCEPTION!!!:\t{e}")
     if step.solved:
         print(f"Step {name} is solved")
         return True
@@ -80,7 +80,7 @@ def check_step_solved(name):
 # endregion
 
 
-def luz(message={}, skip=False):
+def luz_switch(message={}, skip=False):
     def solve():
         actions.prender_luz()
         solve_step("luz")

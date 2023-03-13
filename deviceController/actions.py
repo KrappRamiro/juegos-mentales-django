@@ -62,11 +62,9 @@ def abrir_cajon(cajon):
 def poner_luces_rojo():
     print("Poniendo las luces en rojo")
     document = {
-        "config": {
-            "mode": "panic"
-        }
+        "mode": "panic"
     }
-    publish_to_elements("luz", "lights", document)
+    publish_to_elements("luz", "config", document)
 
 
 def abrir_caldera():
@@ -82,41 +80,33 @@ def prender_luz():
     print("Prendiendo la luz")
     # Reminder: Its not needed to set the lightning level from here
     document = {
-        "config": {
-            "mode": "scary"
-        }
+        "mode": "scary"
     }
-    publish_to_elements("luz", "lights", document)
+    publish_to_elements("luz", "config", document)
 
 
 def apagar_luz():
     print("Apagando la luz")
     document = {
-        "config": {
-            "mode": "off"
-        }
+        "mode": "off"
     }
-    publish_to_elements("luz", "lights", document)
+    publish_to_elements("luz", "config", document)
 
 
 def prender_luz_uv():
     print("Prendiendo la luz UV")
     document = {
-        "uv_light": {
-            "brightness": 250,
-        }
+        "uv_light_active": True
     }
-    publish_to_elements("luz", "lights", document)
+    publish_to_elements("luz", "config", document)
 
 
 def apagar_luz_uv():
     print("Apagando la luz UV")
     document = {
-        "uv_light": {
-            "brightness": 0,
-        }
+        "uv_light_active": False
     }
-    publish_to_elements("luz", "lights", document)
+    publish_to_elements("luz", "config", document)
 
 
 def abrir_heladera():
@@ -136,7 +126,7 @@ def abrir_tablero_electrico():
 
 
 def iniciar_radio():
-    print("Reiniciando la radio")
+    print("Iniciando la radio")
     document = {
         "track_n": 1
     }
@@ -144,7 +134,7 @@ def iniciar_radio():
 
 
 def iniciar_sistema_audio():
-    print("Reiniciando el sistema audio")
+    print("Iniciando el sistema audio")
     document = {
         "track_n": 1
     }
@@ -160,7 +150,7 @@ def reset_game():
             step.solved = False
             step.save()
     except Exception as e:
-        print(e)
+        print(f"EXCEPTION!!!:\t{e}")
     actions.apagar_luz()
     # region reset electroimanes
     document = {
@@ -178,14 +168,10 @@ def reset_game():
 
     # region reset luz
     document = {
-        "config": {
-            "mode": "off",
-        },
-        "uv_light": {
-            "brightness": 0
-        }
+        "mode": "off",
+        "uv_light_active": False
     }
-    publish_to_elements("luz", "lights", document)
+    publish_to_elements("luz", "config", document)
     # endregion reset luz
 
     # region reset audio
@@ -197,6 +183,7 @@ def reset_game():
     # endregion
 
     # Reset the RFID memory
+    print("Reseting the rfid memories")
     mqttc.publish(topic="especiero/actions/clear_rfid")
     mqttc.publish(topic="cuadro/actions/clear_rfid")
     mqttc.publish(topic="soporte_pies/actions/clear_rfid")
