@@ -9,13 +9,10 @@ class LightConfigForm(forms.Form):
         ("off", "Luces apagadas")
     )
     mode = forms.ChoiceField(choices=MODES_CHOICES, label="Modo de las luces")
-    fixed_brightness = forms.IntegerField(
-        label="Nivel de brillo para el modo fijo"
-    )
-    scary_brightness = forms.IntegerField(
-        label="Nivel de brillo para el modo asustadizo")
-    uv_light_active = forms.BooleanField(
-        label="Luz uv prendida?", required=False)
+    rgb_brightness = forms.IntegerField(
+        label="Nivel de brillo de las luces")
+    uv_brightness = forms.IntegerField(
+        label="Nivel de brillo de la luz UV")
     flicker_min_time = forms.IntegerField(
         label="Tiempo mínimo entre parpadeos")
     flicker_max_time = forms.IntegerField(

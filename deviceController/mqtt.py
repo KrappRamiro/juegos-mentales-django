@@ -46,9 +46,9 @@ def on_connect(client, userdata, flags, rc):
     client.message_callback_add(
         "caldera/readings/llaves_paso", callbacks.llaves_paso)
     # ------------------ Light info for the webapp ------------------ #
-    client.subscribe("luz/elements/config")
+    client.subscribe("luz/elements/#")
     client.message_callback_add(
-        "luz/elements/config", callbacks.luz_config)
+        "luz/elements/#", callbacks.luz_elements)
 
 
 mqttc = paho.Client()

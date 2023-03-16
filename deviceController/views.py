@@ -22,11 +22,25 @@ def index(request):
 
 
 def update_lights(request):
+    from .actions import publish_to_elements
     if request.method == "POST":
-        form = LightConfigForm(request.POST)
+        try:
+            model = model_to_dict(LightConfig.objects.get())
+        except Exception as e:
+            print(f"EXCEPTION!!!:\t{e}")
+        # initial=model is used later to see what fields have changed
+        form = LightConfigForm(request.POST, initial=model)
         if form.is_valid():
-            from .actions import publish_to_elements
-            publish_to_elements("luz", "config", form.cleaned_data)
+            form_data = form.cleaned_data
+            # Uncomment this if you want only the changed elements to be published
+            '''
+            changed_fields = form.changed_data
+            new_dict = {
+                key: value for (key, value) in form_data.items() if key in changed_fields}
+            form_data = new_dict
+            '''
+            for key, value in form_data.items():
+                publish_to_elements("luz", key, {key: value})
         else:
             print(form.errors)
         return redirect(light_control)
@@ -35,7 +49,11 @@ def update_lights(request):
 def light_control(request):
     sleep(0.3)
     # Get the form for the UV Light
-    model = model_to_dict(LightConfig.objects.get())
+    try:
+        model = model_to_dict(LightConfig.objects.get())
+    except Exception as e:
+        print(f"EXCEPTION!!!:\t{e}")
+
     light_form = LightConfigForm(initial=model)
     context = {
         "light_form": light_form

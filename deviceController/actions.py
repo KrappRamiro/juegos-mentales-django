@@ -64,7 +64,7 @@ def poner_luces_rojo():
     document = {
         "mode": "panic"
     }
-    publish_to_elements("luz", "config", document)
+    publish_to_elements("luz", "mode", document)
 
 
 def abrir_caldera():
@@ -78,11 +78,10 @@ def abrir_caldera():
 
 def prender_luz():
     print("Prendiendo la luz")
-    # Reminder: Its not needed to set the lightning level from here
     document = {
-        "mode": "scary"
+        "mode": "scary",
     }
-    publish_to_elements("luz", "config", document)
+    publish_to_elements("luz", "mode", document)
 
 
 def apagar_luz():
@@ -90,23 +89,23 @@ def apagar_luz():
     document = {
         "mode": "off"
     }
-    publish_to_elements("luz", "config", document)
+    publish_to_elements("luz", "mode", document)
 
 
 def prender_luz_uv():
     print("Prendiendo la luz UV")
     document = {
-        "uv_light_active": True
+        "uv_brightness": 255
     }
-    publish_to_elements("luz", "config", document)
+    publish_to_elements("luz", "uv_brightness", document)
 
 
 def apagar_luz_uv():
     print("Apagando la luz UV")
     document = {
-        "uv_light_active": False
+        "uv_brightness": 0
     }
-    publish_to_elements("luz", "config", document)
+    publish_to_elements("luz", "uv_brightness", document)
 
 
 def abrir_heladera():
@@ -151,7 +150,6 @@ def reset_game():
             step.save()
     except Exception as e:
         print(f"EXCEPTION!!!:\t{e}")
-    actions.apagar_luz()
     # region reset electroimanes
     document = {
         "status": False
@@ -167,11 +165,8 @@ def reset_game():
     # endregion
 
     # region reset luz
-    document = {
-        "mode": "off",
-        "uv_light_active": False
-    }
-    publish_to_elements("luz", "config", document)
+    apagar_luz()
+    apagar_luz_uv()
     # endregion reset luz
 
     # region reset audio

@@ -43,7 +43,7 @@ def switch(client, userdata, msg):
     if thingname == "soporte_cuchillos":
         steps.soporte_cuchillos(message)
     if thingname == "luz":
-        steps.switch_luz(message)
+        steps.luz_switch(message)
 
 
 def heladera(client, userdata, msg):
@@ -65,8 +65,8 @@ def llaves_paso(client, userdata, msg):
     steps.llaves_paso(message)
 
 
-def luz_config(client, userdata, msg):
-    print("Handling luz/elements/config callback")
+def luz_elements(client, userdata, msg):
+    print("Handling luz/elements/# callback")
     message = json.loads(msg.payload.decode('utf-8'))
     from .models import LightConfig
     print(f"Updating LightConfig model with the following data \n{message}")
