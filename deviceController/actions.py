@@ -78,10 +78,9 @@ def abrir_caldera():
 
 def prender_luz():
     print("Prendiendo la luz")
-    document = {
-        "mode": "scary",
-    }
-    publish_to_elements("luz", "mode", document)
+
+    publish_to_elements("luz", "mode", {"mode": "scary"})
+    publish_to_elements("luz", "rgb_brightness", {"rgb_brightness": 150})
 
 
 def apagar_luz():

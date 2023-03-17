@@ -56,7 +56,7 @@ mqttc.on_connect = on_connect
 mqttc.on_message = on_message
 
 print("Trying to connect with mqttc.connect")
-mqttc.connect('localhost', 1883, keepalive=60)
+mqttc.connect('192.168.0.52', 1883, keepalive=60)
 print("Finished trying to connect to mqttc.connect")
 
 # This is here to avoid circular imports

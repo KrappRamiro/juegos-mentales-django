@@ -87,6 +87,9 @@ def luz_switch(message={}, skip=False):
     if skip:
         solve()
         return
+    if check_step_solved("llaves_paso") == True:
+        print("Not solving luz_switch because the lights have to be red")
+        return
     if check_switch(message):
         solve()
 
@@ -213,6 +216,7 @@ def llaves_paso(message={}, skip=False):
         solve()
         return
     if check_step_solved("cuadro") == False:
+        print("Not solving llaves_paso because cuadro is not solved")
         return
     if message["llaves_paso"][1] == True and message["llaves_paso"][3] == True:
         solve()
