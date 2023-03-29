@@ -23,11 +23,6 @@ def on_connect(client, userdata, flags, rc):
     global connflag
     connflag = True
 
-    # ------------------- Debug -------------------- #
-    client.subscribe("+/debug/#", 1)
-    client.message_callback_add(
-        "+/debug/#",
-        callbacks.debug)
     # ------------------- rfid devices -------------------- #
     client.subscribe("+/readings/rfid")
     client.message_callback_add("+/readings/rfid", callbacks.rfid)
@@ -56,7 +51,7 @@ mqttc.on_connect = on_connect
 mqttc.on_message = on_message
 
 print("Trying to connect with mqttc.connect")
-mqttc.connect('192.168.0.52', 1883, keepalive=60)
+mqttc.connect('localhost', 1883, keepalive=60)
 print("Finished trying to connect to mqttc.connect")
 
 # This is here to avoid circular imports

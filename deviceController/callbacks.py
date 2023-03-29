@@ -12,14 +12,6 @@ from . import actions
 from . import steps
 
 
-def debug(client, userdata, msg):
-    topic = msg.topic.split('/')
-    thingname = topic[0]
-    subtopic = topic[2]
-    message = msg.payload.decode('utf-8')
-    print(f"{thingname} [{subtopic}] says: {message}")
-
-
 def rfid(client, userdata, msg):
     print("Handling generic RFID callback")
     message = json.loads(msg.payload.decode('utf-8'))

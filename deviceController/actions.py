@@ -23,13 +23,13 @@ from .mqtt import mqttc
 def publish_to_elements(thingname, subtopic, dictionary={}):
     topic = thingname + '/elements/' + subtopic
     print(f"Reporting to {topic} the following dictionary: {dictionary}")
-    mqttc.publish(topic=topic, payload=json.dumps(dictionary), qos=1)
+    mqttc.publish(topic=topic, payload=json.dumps(dictionary), qos=1, retain=True)
 
 
 def liberar_grillete(n_grillete):
     print(f"Liberando grillete #{n_grillete}")
     publish_to_elements(
-        "grilletes", f"electroiman_{n_grillete}", {"status": True})
+        "grilletes", f"electroiman_{n_grillete}", {"status": False})
 
 
 def abrir_cajon(cajon):
@@ -56,7 +56,7 @@ def abrir_cajon(cajon):
     print(f"Abriendo cajon {cajon}")
     electroiman_n = cajon[1]
     publish_to_elements(
-        "cajones_bajomesada", f"electroiman_{electroiman_n}", {"status": True})
+        "cajones_bajomesada", f"electroiman_{electroiman_n}", {"status": False})
 
 
 def poner_luces_rojo():
@@ -70,7 +70,7 @@ def poner_luces_rojo():
 def abrir_caldera():
     print("Abriendo la caldera")
     document = {
-        "electroiman_caldera": True
+        "electroiman_caldera": False
     }
     publish_to_elements("caldera", "electroiman_caldera", document)
     poner_luces_rojo()
@@ -110,7 +110,7 @@ def apagar_luz_uv():
 def abrir_heladera():
     print("Abriendo la heladera")
     document = {
-        "status": True
+        "status": False
     }
     publish_to_elements("heladera", "electroiman", document)
 
@@ -118,9 +118,9 @@ def abrir_heladera():
 def abrir_tablero_electrico():
     print("Abriendo el tablero electrico")
     document = {
-        "status": True
+        "status": False
     }
-    publish_to_elements("caldera", "electroiman_tablero", document)
+    publish_to_elements("caldera", "electroiman_tablero_electrico", document)
 
 
 def iniciar_radio():
@@ -151,9 +151,9 @@ def reset_game():
         print(f"EXCEPTION!!!:\t{e}")
     # region reset electroimanes
     document = {
-        "status": False
+        "status": True
     }
-    publish_to_elements("caldera", "electroiman_tablero", document)
+    publish_to_elements("caldera", "electroiman_tablero_electrico", document)
     publish_to_elements("caldera", "electroiman_caldera", document)
     for e in range(4):
         publish_to_elements("grilletes", f"electroiman_{e+1}", document)
@@ -178,7 +178,7 @@ def reset_game():
 
     # Reset the RFID memory
     print("Reseting the rfid memories")
-    mqttc.publish(topic="especiero/actions/clear_rfid")
-    mqttc.publish(topic="cuadro/actions/clear_rfid")
-    mqttc.publish(topic="soporte_pies/actions/clear_rfid")
-    mqttc.publish(topic="tablero_herramientas/actions/clear_rfid")
+    mqttc.publish(topic="especiero/actions/clear_rfid",qos=1)
+    mqttc.publish(topic="cuadro/actions/clear_rfid",qos=1)
+    mqttc.publish(topic="soporte_pies/actions/clear_rfid",qos=1)
+    mqttc.publish(topic="tablero_herramientas/actions/clear_rfid",qos=1)

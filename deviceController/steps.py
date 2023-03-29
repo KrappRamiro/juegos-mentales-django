@@ -133,7 +133,10 @@ def especiero(message={}, skip=False):
         "rfid_2": "3A 38 DA 80",
         "rfid_3": "C9 33 1F 88"
     }
-    if check_rfid(message, combination):
+    #if check_rfid(message, combination):
+    print(f"comparing \n{message} against \n{combination}")
+
+    if message["rfid_1"] == combination["rfid_1"] and message["rfid_2"] == combination["rfid_2"] and message["rfid_3"] == combination["rfid_3"]:
         solve()
 
 
@@ -151,7 +154,10 @@ def tablero_herramientas(message={}, skip=False):
         "rfid_2": "00 00 00 00",
         "rfid_3": "5A 1C E5 80"
     }
-    if check_rfid(message, combination):
+    #if check_rfid(message, combination):
+    print(f"comparing \n{message} against \n{combination}")
+
+    if message["rfid_0"] == combination["rfid_0"] and message["rfid_1"] == combination["rfid_1"]:
         solve()
 
 
@@ -166,9 +172,11 @@ def cuadro(message={}, skip=False):
     if check_step_solved("teclado_heladera") == False:
         return
     combination = {
-        "rfid_0" == "90 A3 FB 1B"
+        "rfid_0": "90 A3 FB 1B"
     }
-    if check_rfid(message, combination):
+    #if check_rfid(message, combination):
+    print(f"comparing \n{message} against \n{combination}")
+    if message["rfid_0"] == combination["rfid_0"]:
         solve()
 
 
@@ -187,7 +195,10 @@ def soporte_pies(message={}, skip=False):
         "rfid_2": "79 10 22 A4",
         "rfid_3": "F9 67 13 87"
     }
-    if check_rfid(message, combination):
+    #if check_rfid(message, combination):
+    print(f"comparing \n{message} against \n{combination}")
+    if message["rfid_2"] == combination["rfid_2"] and message["rfid_3"] == combination["rfid_3"]:
+    
         solve()
 
 
@@ -233,9 +244,11 @@ def caldera(message={}, skip=False):
         return
 
     if check_step_solved("llaves_paso") == False:
+        print("No se puede resolved la caldera porque todavia falta resolver las llaves de paso")
         return
     should_solve = True
 
+    print("-----")
     if message["interruptores"] == False:
         print("interruptores: WRONG")
         should_solve = False
@@ -253,6 +266,7 @@ def caldera(message={}, skip=False):
         should_solve = False
     else:
         print("botones: CORRECT")
+    print("-----")
 
     if should_solve:
         solve()
