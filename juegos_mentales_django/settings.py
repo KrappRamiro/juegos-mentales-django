@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-c3%59zo+vv^swq@3vo0=14q058th3mokry1qb^&xuhy4(euihr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['jm-lecter.us-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['localhost','0.0.0.0','192.168.0.10']
 
 
 # Application definition
@@ -82,8 +82,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'postgres',
+#        'USER': 'krapp',
+#        'PASSWORD': 'jm_canning',
+#        'HOST': 'awseb-e-wfmu6vqppw-stack-awsebrdsdatabase-urixcunu3sop.cqwfmdvdiaga.us-east-1.rds.amazonaws.com',
+#        'PORT': '5432',
+#    }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -130,9 +138,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {
     'version': 1,                       # the dictConfig format version
     'disable_existing_loggers': False,  # retain the default loggers
-    'loggers': {
-        '': {
-            'level': 'DEBUG',
-        }
+    'handlers': {
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
+        },
     },
 }

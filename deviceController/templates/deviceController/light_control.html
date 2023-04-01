@@ -4,16 +4,7 @@
    <form action="{% url 'update_lights' %}" method="post">
       {% csrf_token %}
       {{ formset.management_form }}
-      {% for form in formset %}
-         {{ form }}
-         <br>
-      {% endfor %}
-      <hr>
-      <h4>Luz UV</h4>
-      {{ uv_light_form }}
-      <hr>
-      <h4>Configuracion de las luces</h4>
-      {{ lights_config_form.as_p }}
+      {{ light_form.as_p }}
       <input type="submit" value="Actualizar valores">
    </form>
 {% endblock content %}

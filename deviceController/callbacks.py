@@ -12,74 +12,35 @@ from . import actions
 from . import steps
 
 
-def luz_accepted(client, userdata, msg):
-    # Callback for the shadow luz/get/accepted
-    # Its used for getting the data for the webapp
-    # This callback is an exception to the rule on how callbacks, actions and steps work in this project
-    from . import mutate_luz
-    print("Aceptada la luz")
+def rfid(client, userdata, msg):
+    print("Handling generic RFID callback")
     message = json.loads(msg.payload.decode('utf-8'))
-    message = message["state"]["desired"]
-    mutate_luz(message)
+    thingname = msg.topic.split('/')[0]
+    if thingname == "especiero":
+        steps.especiero(message)
+    if thingname == "tablero_herramientas":
+        steps.tablero_herramientas(message)
+    if thingname == "soporte_pies":
+        steps.soporte_pies(message)
+    if thingname == "cuadro":
+        steps.cuadro(message)
 
 
-def luz(client, userdata, msg):
-    from . import retornar_flag_luz_prendida, activar_flag_luz_prendida, desactivar_flag_luz_prendida
-    # This function is for handling the on/off of the light via switch
-    # This callback is an exception to the rule on how callbacks, actions and steps work in this project
-    if retornar_flag_luz_prendida() == True:
-        print("Not doing anything because the luz was already turned on")
-        return
-    activar_flag_luz_prendida()
-    actions.prender_luz()
-
-
-def soporte_cuchillos(client, userdata, msg):
-    print("Handling soporte_cuchillos callback")
-    # Process the payload
+def switch(client, userdata, msg):
+    print("Handling generic switch callback")
     message = json.loads(msg.payload.decode('utf-8'))
-    if "desired" in message["state"]:
-        return
-    message = message["state"]["reported"]
-    # Call the step
-    steps.soporte_cuchillos(message)
-
-
-def especiero(client, userdata, msg):
-    print("Handling especiero callback")
-    # decode the message into a python dictionary
-    message = json.loads(msg.payload.decode('utf-8'))
-    if "desired" in message["state"]:
-        return
-    message = message["state"]["reported"]
-    steps.soporte_especieros(message)
-
-
-def tablero_herramientas(client, userdata, msg):
-    print("Handling tablero_herramientas callback")
-    # decode the message into a python dictionary
-    message = json.loads(msg.payload.decode('utf-8'))
-    if "desired" in message["state"]:
-        return
-    message = message["state"]["reported"]
-    steps.tablero_herramientas(message)
-
-
-def soporte_pies(client, userdata, msg):
-    print("Handling soporte_pies callback")
-    message = json.loads(msg.payload.decode('utf-8'))
-    if "desired" in message["state"]:
-        return
-    message = message["state"]["reported"]
-    steps.soporte_pies(message)
+    thingname = msg.topic.split('/')[0]
+    if thingname == "licuadora":
+        steps.licuadora(message)
+    if thingname == "soporte_cuchillos":
+        steps.soporte_cuchillos(message)
+    if thingname == "luz":
+        steps.luz_switch(message)
 
 
 def heladera(client, userdata, msg):
     print("Handling heladera callback")
     message = json.loads(msg.payload.decode('utf-8'))
-    # Should not be needed because its not a shadow
-    # if "desired" in message["state"]:
-    #     return
     tecla = message["key"]  # Get the inputted tecla
     steps.teclado_heladera(tecla)
 
@@ -87,27 +48,21 @@ def heladera(client, userdata, msg):
 def caldera(client, userdata, msg):
     print("Handling caldera callback")
     message = json.loads(msg.payload.decode('utf-8'))
-    print(f"En el callback de caldera, el mensaje es {message}")
-    if "desired" in message["state"]:
-        print("caldera es desired, retornando")
-        return
-    message = message["state"]["reported"]
     steps.caldera(message)
 
 
-def licuadora(client, userdata, msg):
-    print("Handling licuadora callback")
+def llaves_paso(client, userdata, msg):
+    print("Handling llaves_paso callback")
     message = json.loads(msg.payload.decode('utf-8'))
-    if "desired" in message["state"]:
-        return
-    message = message["state"]["reported"]
-    steps.licuadora(message)
+    steps.llaves_paso(message)
 
 
-def cuadro(client, userdata, msg):
-    print("Handling cuadro callback")
+def luz_elements(client, userdata, msg):
+    print("Handling luz/elements/# callback")
     message = json.loads(msg.payload.decode('utf-8'))
-    if "desired" in message["state"]:
-        return
-    message = message["state"]["reported"]
-    steps.cuadro(message)
+    from .models import LightConfig
+    print(f"Updating LightConfig model with the following data \n{message}")
+    try:
+        light_config = LightConfig.objects.filter(pk=1).update(**message)
+    except Exception as e:
+        print(f"EXCEPTION!!!:\t{e}")

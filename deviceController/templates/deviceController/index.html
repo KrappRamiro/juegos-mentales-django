@@ -2,31 +2,32 @@
 {% block content %}
    <h1>Control de la sala Hannibal</h1>
    <hr>
-   <h2>Skipeo de pasos</h2>
-   <div>
-      <a href="{% url 'skip_step' "tablero_herramientas" %}"
-         class="btn btn-outline-primary">Tablero herramientas</a>
-      <br>
-      <a href="{% url 'skip_step' "boton_licuadora" %}"
-         class="btn btn-outline-primary">Boton licuadora</a>
-      <br>
-      <a href="{% url 'skip_step' "soporte_especieros" %}"
-         class="btn btn-outline-primary">Soporte especieros</a>
-      <br>
-      <a href="{% url 'skip_step' "soporte_cuchillos" %}"
-         class="btn btn-outline-primary">Soporte cuchillos</a>
-      <br>
-      <a href="{% url 'skip_step' "soporte_pies" %}"
-         class="btn btn-outline-primary">Soporte pies (abre heladera)</a>
-      <br>
-      <a href="{% url 'skip_step' "teclado_heladera" %}"
-         class="btn btn-outline-primary">Teclado de la heladera</a>
-      <br>
-      <a href="{% url 'skip_step' "cuadro" %}" class="btn btn-outline-primary">Cuadro dado vuelta</a>
-      <br>
-      <a href="{% url 'skip_step' "caldera" %}"
-         class="btn btn-outline-primary">Resolucion de caldera [FIN DE JUEGO]</a>
-      <br>
+   <a href="{% url 'light_control' %}">
+      <h3>Control de luces</h3>
+   </a>
+   <hr>
+   <div class="row align-items-start">
+      <div class="col">
+         <h2>Skipeo de pasos</h2>
+         {% for step in steps %}
+            <a href="{% url 'skip_step' step.step_name %}"
+               class="btn btn-outline-primary">{{ step.step_name }}</a>
+            <br>
+         {% endfor %}
+      </div>
+      <div class="col">
+         <h2>Pasos resueltos</h2>
+         {% for step in steps %}
+            <b>{{ step.step_name }}:</b>
+            {% if step.solved %}
+               <span style="color:green">RESUELTO</span>
+            {% else %}
+               <span style="color:red">SIN RESOLVER</span>
+            {% endif %}
+            <br>
+         {% endfor %}
+         <br>
+      </div>
    </div>
    <hr>
    <h2>Control Grilletes</h2>
@@ -52,9 +53,7 @@
    <h4>Radio</h4>
    <a href="{% url 'radio_vol_up' %}" class="btn btn-outline-primary">VOL UP</a>
    <a href="{% url 'radio_vol_down' %}" class="btn btn-outline-primary">VOL DOWN</a>
-   <h4>
-      Sistema de audio
-   </h4>
+   <h4>Sistema de audio</h4>
    <a href="{% url 'sistema_audio_vol_up' %}"
       class="btn btn-outline-primary">VOL UP</a>
    <a href="{% url 'sistema_audio_vol_down' %}"

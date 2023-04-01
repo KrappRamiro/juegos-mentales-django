@@ -22,89 +22,36 @@ def on_connect(client, userdata, flags, rc):
         print("Failed to connect, return code %d\n", rc)
     global connflag
     connflag = True
-    # client.subscribe("#", 1) #Suscribe to every topic, just for testing purposes
-    # ----------- Tablero herramientas --------------- #
-    client.subscribe("$aws/things/tablero_herramientas/shadow/update", 1)
-    client.message_callback_add(
-        "$aws/things/tablero_herramientas/shadow/update",
-        callbacks.tablero_herramientas)
 
-    # ----------- Especiero --------------- #
-    client.subscribe("$aws/things/especiero/shadow/update", 1)
+    # ------------------- rfid devices -------------------- #
+    client.subscribe("+/readings/rfid")
+    client.message_callback_add("+/readings/rfid", callbacks.rfid)
+    # ------------------- switch devices -------------------- #
+    client.subscribe("+/readings/switch")
+    client.message_callback_add("+/readings/switch", callbacks.switch)
+    # ----------------- heladera -------------------------- #
+    client.subscribe("heladera/readings/keypad")
+    client.message_callback_add("heladera/readings/keypad", callbacks.heladera)
+    # ----------------- caldera -------------------------- #
+    client.subscribe("caldera/readings/tablero_electrico")
     client.message_callback_add(
-        "$aws/things/especiero/shadow/update",
-        callbacks.especiero)
-
-    # ----------- Soporte cuchillos --------------- #
-    client.subscribe("$aws/things/soporte_cuchillos/shadow/update", 1)
+        "caldera/readings/tablero_electrico", callbacks.caldera)
+    # ----------------- llaves_paso ----------------------- #
+    client.subscribe("caldera/readings/llaves_paso")
     client.message_callback_add(
-        "$aws/things/soporte_cuchillos/shadow/update",
-        callbacks.soporte_cuchillos)
-
-    # ----------- Soporte Pies --------------- #
-    client.subscribe("$aws/things/soporte_pies/shadow/update", 1)
+        "caldera/readings/llaves_paso", callbacks.llaves_paso)
+    # ------------------ Light info for the webapp ------------------ #
+    client.subscribe("luz/elements/#")
     client.message_callback_add(
-        "$aws/things/soporte_pies/shadow/update",
-        callbacks.soporte_pies)
-
-    # ----------- Teclado de la heladera --------------- #
-    client.subscribe("heladera/teclado", 1)
-    client.message_callback_add(
-        "heladera/teclado",
-        callbacks.heladera)
-
-    # ----------- Caldera --------------- #
-    client.subscribe("$aws/things/caldera/shadow/update", 1)
-    client.message_callback_add(
-        "$aws/things/caldera/shadow/update",
-        callbacks.caldera)
-
-    # ----------- Luz --------------- #
-    client.subscribe("luz/switch", 1)
-    client.message_callback_add(
-        "luz/switch",
-        callbacks.luz)
-    client.subscribe("$aws/things/luz/shadow/get/accepted", 1)
-    client.message_callback_add(
-        "$aws/things/luz/shadow/get/accepted",
-        callbacks.luz_accepted)
-
-    # ----------- Cuadro --------------- #
-    client.subscribe("$aws/things/cuadro/shadow/update", 1)
-    client.message_callback_add(
-        "$aws/things/cuadro/shadow/update",
-        callbacks.cuadro)
-
-    # ----------- Licuadora --------------- #
-    client.subscribe("$aws/things/licuadora/shadow/update", 1)
-    client.message_callback_add(
-        "$aws/things/licuadora/shadow/update",
-        callbacks.licuadora)
-
-
-# def on_log(client, userdata, level, buf):
-#    print(msg.topic+" "+str(msg.payload))
+        "luz/elements/#", callbacks.luz_elements)
 
 
 mqttc = paho.Client()
 mqttc.on_connect = on_connect
 mqttc.on_message = on_message
-# mqttc.on_log = on_log
-
-awshost = "a3df45vgz0yp2s-ats.iot.us-east-1.amazonaws.com"
-awsport = 8883
-clientId = "randomData"
-thingName = "randomData"
-caPath = "/var/app/current/certificates/AmazonRootCA1.crt"
-certPath = "/var/app/current/certificates/certificate.pem"
-keyPath = "/var/app/current/certificates/private.pem"
-
-mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath,
-              cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
 
 print("Trying to connect with mqttc.connect")
-# Change this when using real code
-mqttc.connect_async(awshost, awsport, keepalive=60)
+mqttc.connect('localhost', 1883, keepalive=60)
 print("Finished trying to connect to mqttc.connect")
 
 # This is here to avoid circular imports

@@ -19,5 +19,5 @@ urlpatterns = [
     path("sistema_audio_vol_up", views.sistema_audio_vol_up,
          name="sistema_audio_vol_up"),
     path("sistema_audio_vol_down", views.sistema_audio_vol_down,
-         name="sistema_audio_vol_down")
+         name="sistema_audio_vol_down"),
 ]
