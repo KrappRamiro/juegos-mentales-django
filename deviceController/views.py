@@ -114,20 +114,20 @@ def iniciar_sala(request):
 
 
 def radio_vol_up(request):
-    mqttc.publish(topic="radio/actions/vol_up",qos=1,retain=True)
+    mqttc.publish(topic="radio/actions/vol_up", qos=1)
     return redirect(index)
 
 
 def radio_vol_down(request):
-    mqttc.publish(topic="radio/actions/vol_down",qos=1,retain=True)
+    mqttc.publish(topic="radio/actions/vol_down", qos=1)
     return redirect(index)
 
 
 def sistema_audio_vol_up(request):
-    mqttc.publish(topic="sistema_audio/actions/vol_up",qos=1,retain=True)
+    mqttc.publish(topic="sistema_audio/actions/vol_up", qos=1)
     return redirect(index)
 
 
 def sistema_audio_vol_down(request):
-    mqttc.publish(topic="sistema_audio/actions/vol_down",qos=1,retain=True)
+    mqttc.publish(topic="sistema_audio/actions/vol_down", qos=1)
     return redirect(index)
