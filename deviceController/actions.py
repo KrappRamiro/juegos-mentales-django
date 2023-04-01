@@ -20,10 +20,11 @@ import json
 from .mqtt import mqttc
 
 
-def publish_to_elements(thingname, subtopic, dictionary={}):
+def publish_to_elements(thingname, subtopic, dictionary={}, retain=True):
     topic = thingname + '/elements/' + subtopic
     print(f"Reporting to {topic} the following dictionary: {dictionary}")
-    mqttc.publish(topic=topic, payload=json.dumps(dictionary), qos=1, retain=True)
+    mqttc.publish(topic=topic, payload=json.dumps(
+        dictionary), qos=1, retain=retain)
 
 
 def liberar_grillete(n_grillete):
@@ -128,7 +129,7 @@ def iniciar_radio():
     document = {
         "track_n": 1
     }
-    publish_to_elements("radio", "track_n", document)
+    publish_to_elements("radio", "track_n", document, False)
 
 
 def iniciar_sistema_audio():
@@ -136,7 +137,7 @@ def iniciar_sistema_audio():
     document = {
         "track_n": 1
     }
-    publish_to_elements("sistema_audio", "track_n", document)
+    publish_to_elements("sistema_audio", "track_n", document, False)
 
 
 def reset_game():
@@ -172,13 +173,13 @@ def reset_game():
     document = {
         "track_n": 0
     }
-    publish_to_elements("radio", "track_n", document)
-    publish_to_elements("sistema_audio", "track_n", document)
+    publish_to_elements("radio", "track_n", document, False)
+    publish_to_elements("sistema_audio", "track_n", document, False)
     # endregion
 
     # Reset the RFID memory
     print("Reseting the rfid memories")
-    mqttc.publish(topic="especiero/actions/clear_rfid",qos=1)
-    mqttc.publish(topic="cuadro/actions/clear_rfid",qos=1)
-    mqttc.publish(topic="soporte_pies/actions/clear_rfid",qos=1)
-    mqttc.publish(topic="tablero_herramientas/actions/clear_rfid",qos=1)
+    mqttc.publish(topic="especiero/actions/clear_rfid", qos=1)
+    mqttc.publish(topic="cuadro/actions/clear_rfid", qos=1)
+    mqttc.publish(topic="soporte_pies/actions/clear_rfid", qos=1)
+    mqttc.publish(topic="tablero_herramientas/actions/clear_rfid", qos=1)
